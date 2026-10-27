@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import clsx from 'clsx';
+import { Menu, Search, ShoppingBag, X } from 'lucide-react';
 import { Logo } from './Logo';
 import { buttonStyles } from '../ui/button-styles';
 import { useCartStore } from '../../lib/cart-store';
 import { buildWhatsAppLink } from '../../lib/whatsapp';
 import { analytics } from '../../lib/api';
 import { CartDrawer } from './CartDrawer';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
 const NAV_LINKS = [
   { href: '/', label: 'Início' },
@@ -65,7 +67,7 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
   return (
     <header
       className={clsx(
-        'sticky top-0 z-40 border-b transition-colors duration-200',
+        'sticky top-0 z-40 border-b transition-colors duration-300',
         scrolled ? 'border-border bg-bg/90 backdrop-blur-md' : 'border-transparent bg-bg',
       )}
     >
@@ -78,8 +80,9 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
               key={link.href}
               href={link.href}
               className={clsx(
-                'text-sm font-medium transition-colors hover:text-aki-green-400',
-                pathname === link.href ? 'text-aki-green-400' : 'text-text-muted',
+                'relative text-sm font-medium transition-colors hover:text-aki-green-400 py-1',
+                'after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-aki-green-400 after:transition-all after:duration-300',
+                pathname === link.href ? 'text-aki-green-400 after:w-full' : 'text-text-muted after:w-0 hover:after:w-full',
               )}
             >
               {link.label}
@@ -87,17 +90,18 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
           ))}
         </nav>
 
-        <form onSubmit={submitSearch} className="hidden md:flex flex-1 max-w-xs ml-auto items-center">
+        <form onSubmit={submitSearch} className="relative hidden md:flex flex-1 max-w-xs ml-auto items-center">
           <label htmlFor="header-search" className="sr-only">
             Pesquisar produtos
           </label>
+          <Search size={16} strokeWidth={2} className="pointer-events-none absolute left-3 text-text-muted" />
           <input
             id="header-search"
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar produtos..."
-            className="w-full rounded-xl border border-border bg-surface-1 px-3.5 py-2 text-sm text-text placeholder:text-text-muted/70 focus-visible:outline-none focus-visible:border-aki-green-500 focus-visible:ring-2 focus-visible:ring-aki-green-500/30"
+            className="w-full rounded-xl border border-border bg-surface-1 py-2 pl-9 pr-3.5 text-sm text-text placeholder:text-text-muted/70 transition-colors focus-visible:outline-none focus-visible:border-aki-green-500 focus-visible:ring-2 focus-visible:ring-aki-green-500/30"
           />
         </form>
 
@@ -106,13 +110,14 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
             type="button"
             onClick={() => openCart()}
             aria-label={`Abrir seleção de produtos (${totalItems} ${totalItems === 1 ? 'item' : 'itens'})`}
-            className="relative rounded-xl p-2.5 text-text hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aki-green-400"
+            className="relative rounded-xl p-2.5 text-text transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aki-green-400"
           >
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 7V6a4 4 0 0 1 8 0v1M4.5 7h11l-1 13h-9z" />
-            </svg>
+            <ShoppingBag size={21} strokeWidth={1.8} />
             {totalItems > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-aki-green-500 px-1 text-[11px] font-bold text-text-on-green">
+              <span
+                key={totalItems}
+                className="animate-pop absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-aki-green-500 px-1 text-[11px] font-bold text-text-on-green"
+              >
                 {totalItems}
               </span>
             )}
@@ -123,8 +128,9 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
             target="_blank"
             rel="noopener"
             onClick={() => analytics.track({ eventType: 'whatsapp_click' })}
-            className={clsx(buttonStyles('whatsapp', 'sm'), 'hidden sm:inline-flex')}
+            className={clsx(buttonStyles('whatsapp', 'sm', 'gap-1.5'), 'hidden sm:inline-flex')}
           >
+            <WhatsAppIcon size={15} />
             Falar no WhatsApp
           </a>
 
@@ -134,24 +140,32 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
             aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
-            className="lg:hidden rounded-xl p-2.5 text-text hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aki-green-400"
+            className="lg:hidden rounded-xl p-2.5 text-text transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aki-green-400"
           >
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-              {menuOpen ? <path d="M18 6 6 18M6 6l12 12" /> : <path d="M3 6h18M3 12h18M3 18h18" />}
-            </svg>
+            <span className="relative block h-[21px] w-[21px]">
+              <Menu size={21} strokeWidth={1.8} className={clsx('absolute inset-0 transition-all duration-200', menuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100')} />
+              <X size={21} strokeWidth={1.8} className={clsx('absolute inset-0 transition-all duration-200', menuOpen ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0')} />
+            </span>
           </button>
         </div>
       </div>
 
-      {menuOpen && (
-        <nav id="mobile-menu" aria-label="Navegação mobile" className="lg:hidden border-t border-border bg-bg px-4 py-4">
+      <nav
+        id="mobile-menu"
+        aria-label="Navegação mobile"
+        className={clsx(
+          'lg:hidden grid overflow-hidden border-t border-border bg-bg transition-[grid-template-rows] duration-300 ease-out',
+          menuOpen ? 'grid-rows-[1fr] border-opacity-100' : 'grid-rows-[0fr] border-opacity-0',
+        )}
+      >
+        <div className="min-h-0 px-4 py-4">
           <ul className="flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   className={clsx(
-                    'block rounded-lg px-3 py-2.5 text-sm font-medium',
+                    'block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                     pathname === link.href ? 'bg-surface-2 text-aki-green-400' : 'text-text hover:bg-surface-2',
                   )}
                 >
@@ -160,25 +174,27 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
               </li>
             ))}
           </ul>
-          <form onSubmit={submitSearch} className="mt-3 flex md:hidden">
+          <form onSubmit={submitSearch} className="relative mt-3 flex md:hidden">
+            <Search size={16} strokeWidth={2} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar produtos..."
-              className="w-full rounded-xl border border-border bg-surface-1 px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted/70 focus-visible:outline-none focus-visible:border-aki-green-500"
+              className="w-full rounded-xl border border-border bg-surface-1 py-2.5 pl-9 pr-3.5 text-sm text-text placeholder:text-text-muted/70 focus-visible:outline-none focus-visible:border-aki-green-500"
             />
           </form>
           <a
             href={whatsappHref}
             target="_blank"
             rel="noopener"
-            className={clsx(buttonStyles('whatsapp', 'md'), 'mt-3 w-full sm:hidden')}
+            className={clsx(buttonStyles('whatsapp', 'md', 'gap-1.5'), 'mt-3 w-full sm:hidden')}
           >
+            <WhatsAppIcon size={16} />
             Falar no WhatsApp
           </a>
-        </nav>
-      )}
+        </div>
+      </nav>
 
       <CartDrawer open={cartOpen} onClose={closeCart} whatsappNumber={whatsappNumber} />
     </header>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from 'react';
 import clsx from 'clsx';
+import { X } from 'lucide-react';
 
 interface ModalProps {
   open: boolean;
@@ -42,11 +43,9 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
           type="button"
           onClick={onClose}
           aria-label="Fechar"
-          className="rounded-lg p-1.5 text-text-muted hover:bg-surface-1 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aki-green-400"
+          className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface-1 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aki-green-400"
         >
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M18 6 6 18M6 6l12 12" />
-          </svg>
+          <X size={20} strokeWidth={2} />
         </button>
       </div>
       <div className="max-h-[70vh] overflow-y-auto px-6 py-5">{children}</div>

@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { Eye, ImageOff } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { buttonStyles } from '../ui/button-styles';
@@ -9,6 +10,7 @@ import { formatPrice, installmentValue } from '../../lib/format';
 import { assetUrl } from '../../lib/asset-url';
 import { buildSingleProductMessage, buildWhatsAppLink } from '../../lib/whatsapp';
 import { analytics } from '../../lib/api';
+import { WhatsAppIcon } from './WhatsAppIcon';
 import type { Product } from '../../lib/types';
 
 interface ProductCardProps {
@@ -49,7 +51,10 @@ export function ProductCard({ product, whatsappNumber, siteUrl }: ProductCardPro
             className="object-contain p-6 transition-transform duration-250 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-text-muted text-sm">Sem imagem</div>
+          <div className="flex h-full flex-col items-center justify-center gap-1.5 text-text-muted">
+            <ImageOff size={22} strokeWidth={1.5} />
+            <span className="text-xs">Sem imagem</span>
+          </div>
         )}
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
           {hasDiscount && <Badge tone="warning">Oferta</Badge>}
@@ -82,7 +87,8 @@ export function ProductCard({ product, whatsappNumber, siteUrl }: ProductCardPro
         </div>
 
         <div className="mt-auto flex flex-col gap-2 pt-3">
-          <Link href={`/produto/${product.slug}`} className={buttonStyles('secondary', 'sm', 'whitespace-nowrap')}>
+          <Link href={`/produto/${product.slug}`} className={buttonStyles('secondary', 'sm', 'gap-1.5 whitespace-nowrap')}>
+            <Eye size={14} strokeWidth={2} />
             Ver detalhes
           </Link>
           <a
@@ -90,8 +96,9 @@ export function ProductCard({ product, whatsappNumber, siteUrl }: ProductCardPro
             target="_blank"
             rel="noopener"
             onClick={() => analytics.track({ eventType: 'whatsapp_click', productId: product.id })}
-            className={buttonStyles('whatsapp', 'sm', 'whitespace-nowrap')}
+            className={buttonStyles('whatsapp', 'sm', 'gap-1.5 whitespace-nowrap')}
           >
+            <WhatsAppIcon size={14} />
             Comprar
           </a>
         </div>

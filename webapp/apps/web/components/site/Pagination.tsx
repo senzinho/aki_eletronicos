@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import clsx from 'clsx';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PaginationProps {
   page: number;
@@ -20,11 +21,12 @@ export function Pagination({ page, totalPages, buildHref }: PaginationProps) {
         href={buildHref(Math.max(1, page - 1))}
         aria-disabled={page === 1}
         className={clsx(
-          'rounded-lg px-3 py-2 text-sm',
+          'flex items-center gap-1 rounded-lg px-3 py-2 text-sm transition-colors',
           page === 1 ? 'pointer-events-none text-text-muted/40' : 'text-text-muted hover:text-text',
         )}
       >
-        Anterior
+        <ChevronLeft size={16} strokeWidth={2} />
+        <span className="hidden sm:inline">Anterior</span>
       </Link>
       {pages.map((p, i) => (
         <span key={p} className="flex items-center gap-1.5">
@@ -33,7 +35,7 @@ export function Pagination({ page, totalPages, buildHref }: PaginationProps) {
             href={buildHref(p)}
             aria-current={p === page ? 'page' : undefined}
             className={clsx(
-              'flex h-9 w-9 items-center justify-center rounded-lg text-sm font-medium',
+              'flex h-9 w-9 items-center justify-center rounded-lg text-sm font-medium transition-all duration-200',
               p === page ? 'bg-aki-green-500 text-text-on-green' : 'text-text-muted hover:bg-surface-2 hover:text-text',
             )}
           >
@@ -45,11 +47,12 @@ export function Pagination({ page, totalPages, buildHref }: PaginationProps) {
         href={buildHref(Math.min(totalPages, page + 1))}
         aria-disabled={page === totalPages}
         className={clsx(
-          'rounded-lg px-3 py-2 text-sm',
+          'flex items-center gap-1 rounded-lg px-3 py-2 text-sm transition-colors',
           page === totalPages ? 'pointer-events-none text-text-muted/40' : 'text-text-muted hover:text-text',
         )}
       >
-        Próxima
+        <span className="hidden sm:inline">Próxima</span>
+        <ChevronRight size={16} strokeWidth={2} />
       </Link>
     </nav>
   );

@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
+import { SlidersHorizontal } from 'lucide-react';
 import { Drawer } from '../ui/Drawer';
 import { buttonStyles } from '../ui/button-styles';
 import type { Brand, Category } from '../../lib/types';
@@ -185,7 +186,8 @@ export function ProductFilters({ categories, brands, hideCategory, hideOnSale }:
       </form>
 
       <div className="lg:hidden mb-4">
-        <button type="button" onClick={() => setDrawerOpen(true)} className={buttonStyles('secondary', 'sm')}>
+        <button type="button" onClick={() => setDrawerOpen(true)} className={buttonStyles('secondary', 'sm', 'gap-1.5')}>
+          <SlidersHorizontal size={15} strokeWidth={2} />
           Filtrar e ordenar
         </button>
       </div>

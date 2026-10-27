@@ -1,5 +1,7 @@
+import { PackageSearch } from 'lucide-react';
 import { ProductCard } from './ProductCard';
 import { Pagination } from './Pagination';
+import { Reveal } from '../ui/Reveal';
 import type { Product } from '../../lib/types';
 
 interface ProductResultsProps {
@@ -25,7 +27,10 @@ export function ProductResults({
 }: ProductResultsProps) {
   if (total === 0) {
     return (
-      <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface-1 py-16 text-center">
+      <div className="flex flex-1 flex-col items-center gap-3 rounded-2xl border border-border bg-surface-1 py-16 text-center">
+        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-2 text-text-muted">
+          <PackageSearch size={24} strokeWidth={1.5} />
+        </span>
         <p className="font-heading text-lg font-semibold text-text">
           {hasActiveFilters ? 'Nenhum resultado encontrado' : 'Nenhum produto disponível no momento'}
         </p>
@@ -42,8 +47,10 @@ export function ProductResults({
     <div className="flex-1">
       <p className="text-sm text-text-muted mb-5">{total} produto{total === 1 ? '' : 's'} encontrado{total === 1 ? '' : 's'}</p>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
-        {items.map((p) => (
-          <ProductCard key={p.id} product={p} whatsappNumber={whatsappNumber} siteUrl={siteUrl} />
+        {items.map((p, i) => (
+          <Reveal key={p.id} delay={Math.min(i, 7) * 60}>
+            <ProductCard product={p} whatsappNumber={whatsappNumber} siteUrl={siteUrl} />
+          </Reveal>
         ))}
       </div>
       <Pagination page={page} totalPages={totalPages} buildHref={buildPageHref} />

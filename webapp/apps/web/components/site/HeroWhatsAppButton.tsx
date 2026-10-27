@@ -3,6 +3,7 @@
 import { buttonStyles, type ButtonVariant } from '../ui/button-styles';
 import { buildWhatsAppLink } from '../../lib/whatsapp';
 import { analytics } from '../../lib/api';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
 interface HeroWhatsAppButtonProps {
   whatsappNumber: string;
@@ -18,8 +19,9 @@ export function HeroWhatsAppButton({ whatsappNumber, variant = 'whatsapp', label
       target="_blank"
       rel="noopener"
       onClick={() => analytics.track({ eventType: 'whatsapp_click' })}
-      className={buttonStyles(variant, 'lg')}
+      className={buttonStyles(variant, 'lg', 'gap-2')}
     >
+      <WhatsAppIcon size={18} />
       {label}
     </a>
   );

@@ -3,7 +3,9 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
+import { Check, Minus, Plus, Star, ZoomIn } from 'lucide-react';
 import { Modal } from '../ui/Modal';
+import { WhatsAppIcon } from './WhatsAppIcon';
 import { buttonStyles } from '../ui/button-styles';
 import { Badge } from '../ui/Badge';
 import { formatPrice, installmentValue } from '../../lib/format';
@@ -115,13 +117,26 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
         <button
           type="button"
           onClick={() => currentImg && setZoomOpen(true)}
-          className="relative aspect-square w-full overflow-hidden rounded-2xl border border-border bg-surface-1 cursor-zoom-in"
+          className="group relative aspect-square w-full overflow-hidden rounded-2xl border border-border bg-surface-1 cursor-zoom-in"
           aria-label="Ampliar imagem do produto"
         >
           {currentImg ? (
-            <Image src={currentImg} alt={product.name} fill sizes="(min-width: 1024px) 560px, 100vw" className="object-contain p-8" priority />
+            <Image
+              key={currentImg}
+              src={currentImg}
+              alt={product.name}
+              fill
+              sizes="(min-width: 1024px) 560px, 100vw"
+              className="animate-item-in object-contain p-8 transition-transform duration-500 ease-out group-hover:scale-105"
+              priority
+            />
           ) : (
             <div className="flex h-full items-center justify-center text-text-muted text-sm">Sem imagem</div>
+          )}
+          {currentImg && (
+            <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-bg/70 text-text opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100">
+              <ZoomIn size={16} strokeWidth={2} />
+            </span>
           )}
         </button>
 
@@ -137,8 +152,8 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
                   aria-label={`Ver imagem ${i + 1}`}
                   aria-current={i === activeImage}
                   className={clsx(
-                    'relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border bg-surface-1',
-                    i === activeImage ? 'border-aki-green-500' : 'border-border',
+                    'relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border bg-surface-1 transition-all duration-200',
+                    i === activeImage ? 'border-aki-green-500 ring-2 ring-aki-green-500/30' : 'border-border hover:border-aki-green-500/50',
                   )}
                 >
                   {thumb && <Image src={thumb} alt="" fill className="object-contain p-1.5" />}
@@ -159,7 +174,10 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
           {product.badge && <Badge tone="green">{product.badge}</Badge>}
           {product.priceFrom && <Badge tone="warning">Oferta</Badge>}
           {product.ratingCount > 0 && product.ratingAvg && (
-            <span className="text-sm text-text-muted">★ {product.ratingAvg} ({product.ratingCount})</span>
+            <span className="inline-flex items-center gap-1 text-sm text-text-muted">
+              <Star size={14} strokeWidth={0} fill="currentColor" className="text-warning" />
+              {product.ratingAvg} ({product.ratingCount})
+            </span>
           )}
         </div>
 
@@ -189,8 +207,10 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
                   onClick={() => setSelectedColor(c)}
                   aria-pressed={c === selectedColor}
                   className={clsx(
-                    'rounded-xl border px-3.5 py-2 text-sm',
-                    c === selectedColor ? 'border-aki-green-500 bg-aki-green-500/10 text-text' : 'border-border text-text-muted hover:text-text',
+                    'rounded-xl border px-3.5 py-2 text-sm transition-all duration-200',
+                    c === selectedColor
+                      ? 'border-aki-green-500 bg-aki-green-500/10 text-text shadow-[0_0_0_1px_var(--aki-green-500)]'
+                      : 'border-border text-text-muted hover:border-aki-green-500/50 hover:text-text',
                   )}
                 >
                   {c}
@@ -211,8 +231,10 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
                   onClick={() => setSelectedStorage(st)}
                   aria-pressed={st === selectedStorage}
                   className={clsx(
-                    'rounded-xl border px-3.5 py-2 text-sm',
-                    st === selectedStorage ? 'border-aki-green-500 bg-aki-green-500/10 text-text' : 'border-border text-text-muted hover:text-text',
+                    'rounded-xl border px-3.5 py-2 text-sm transition-all duration-200',
+                    st === selectedStorage
+                      ? 'border-aki-green-500 bg-aki-green-500/10 text-text shadow-[0_0_0_1px_var(--aki-green-500)]'
+                      : 'border-border text-text-muted hover:border-aki-green-500/50 hover:text-text',
                   )}
                 >
                   {st}
@@ -236,8 +258,10 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
               onClick={() => setCondition('pix')}
               aria-pressed={condition === 'pix'}
               className={clsx(
-                'flex-1 rounded-xl border px-3.5 py-2.5 text-sm',
-                condition === 'pix' ? 'border-aki-green-500 bg-aki-green-500/10 text-text' : 'border-border text-text-muted hover:text-text',
+                'flex-1 rounded-xl border px-3.5 py-2.5 text-sm transition-all duration-200',
+                condition === 'pix'
+                  ? 'border-aki-green-500 bg-aki-green-500/10 text-text shadow-[0_0_0_1px_var(--aki-green-500)]'
+                  : 'border-border text-text-muted hover:border-aki-green-500/50 hover:text-text',
               )}
             >
               Pix à vista
@@ -248,8 +272,10 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
                 onClick={() => setCondition('parcelado')}
                 aria-pressed={condition === 'parcelado'}
                 className={clsx(
-                  'flex-1 rounded-xl border px-3.5 py-2.5 text-sm',
-                  condition === 'parcelado' ? 'border-aki-green-500 bg-aki-green-500/10 text-text' : 'border-border text-text-muted hover:text-text',
+                  'flex-1 rounded-xl border px-3.5 py-2.5 text-sm transition-all duration-200',
+                  condition === 'parcelado'
+                    ? 'border-aki-green-500 bg-aki-green-500/10 text-text shadow-[0_0_0_1px_var(--aki-green-500)]'
+                    : 'border-border text-text-muted hover:border-aki-green-500/50 hover:text-text',
                 )}
               >
                 Parcelado
@@ -264,22 +290,30 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-text">Quantidade</span>
           <div className="flex items-center rounded-xl border border-border">
-            <button type="button" onClick={() => setQuantity((q) => Math.max(1, q - 1))} className="px-3 py-2 text-text-muted hover:text-text" aria-label="Diminuir quantidade">
-              −
+            <button
+              type="button"
+              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              disabled={quantity <= 1}
+              className="p-2.5 text-text-muted transition-colors hover:text-text disabled:opacity-30"
+              aria-label="Diminuir quantidade"
+            >
+              <Minus size={15} strokeWidth={2.5} />
             </button>
             <span className="min-w-8 text-center text-sm">{quantity}</span>
-            <button type="button" onClick={() => setQuantity((q) => q + 1)} className="px-3 py-2 text-text-muted hover:text-text" aria-label="Aumentar quantidade">
-              +
+            <button type="button" onClick={() => setQuantity((q) => q + 1)} className="p-2.5 text-text-muted transition-colors hover:text-text" aria-label="Aumentar quantidade">
+              <Plus size={15} strokeWidth={2.5} />
             </button>
           </div>
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row mt-2">
-          <button type="button" onClick={buyNow} disabled={unavailable} className={buttonStyles('whatsapp', 'lg', 'flex-1')}>
+          <button type="button" onClick={buyNow} disabled={unavailable} className={buttonStyles('whatsapp', 'lg', 'flex-1 gap-2')}>
+            <WhatsAppIcon size={18} />
             Comprar pelo WhatsApp
           </button>
-          <button type="button" onClick={addToSelection} disabled={unavailable} className={buttonStyles('secondary', 'lg', 'flex-1')}>
-            {justAdded ? 'Adicionado ✓' : 'Adicionar à seleção'}
+          <button type="button" onClick={addToSelection} disabled={unavailable} className={buttonStyles('secondary', 'lg', 'flex-1 gap-1.5')}>
+            {justAdded && <Check size={16} strokeWidth={2.5} className="animate-pop" />}
+            {justAdded ? 'Adicionado' : 'Adicionar à seleção'}
           </button>
         </div>
 

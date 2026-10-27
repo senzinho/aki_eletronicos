@@ -2,7 +2,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import clsx from 'clsx';
 import { Drawer } from '../ui/Drawer';
+import { WhatsAppIcon } from './WhatsAppIcon';
 import { buttonStyles } from '../ui/button-styles';
 import { cartItemLineTotal, cartItemUnitPrice, useCartStore } from '../../lib/cart-store';
 import { formatPrice } from '../../lib/format';
@@ -47,80 +50,135 @@ export function CartDrawer({ open, onClose, whatsappNumber }: CartDrawerProps) {
   }
 
   return (
-    <Drawer open={open} onClose={onClose} title={`Sua seleção (${items.length})`}>
+    <Drawer
+      open={open}
+      onClose={onClose}
+      title={`Sua seleção (${items.length})`}
+      titleContent={
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-aki-green-500/15 text-aki-green-400">
+            <ShoppingBag size={17} strokeWidth={2} />
+          </span>
+          <h2 className="font-heading text-lg font-semibold">
+            Sua seleção
+            {items.length > 0 && <span className="ml-1.5 text-sm font-normal text-text-muted">({items.length})</span>}
+          </h2>
+        </div>
+      }
+    >
       {items.length === 0 ? (
-        <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
-          <p className="text-text-muted text-sm">Sua seleção está vazia.</p>
+        <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
+          <span className="animate-float flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-surface-1 text-text-muted">
+            <ShoppingBag size={28} strokeWidth={1.5} />
+          </span>
+          <div>
+            <p className="font-heading text-sm font-semibold text-text">Sua seleção está vazia</p>
+            <p className="mt-1 text-xs text-text-muted">Escolha produtos no catálogo para consultar pelo WhatsApp.</p>
+          </div>
           <Link href="/produtos" onClick={onClose} className={buttonStyles('secondary', 'sm')}>
             Explorar produtos
           </Link>
         </div>
       ) : (
         <div className="flex h-full flex-col">
-          <ul className="flex flex-1 flex-col gap-4 overflow-y-auto">
-            {items.map((item) => {
+          <ul className="flex flex-1 flex-col gap-3 overflow-y-auto pr-0.5">
+            {items.map((item, index) => {
               const img = assetUrl(item.mainImage);
               return (
-                <li key={item.key} className="flex gap-3 border-b border-border pb-4">
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-surface-1">
-                    {img && <Image src={img} alt={item.name} fill className="object-contain p-1.5" />}
-                  </div>
-                  <div className="flex flex-1 flex-col gap-1.5">
-                    <div className="flex items-start justify-between gap-2">
-                      <Link href={`/produto/${item.slug}`} onClick={onClose} className="text-sm font-medium leading-snug hover:text-aki-green-400">
-                        {item.name}
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => removeItem(item.key)}
-                        aria-label={`Remover ${item.name}`}
-                        className="shrink-0 text-text-muted hover:text-danger"
-                      >
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                          <path d="M18 6 6 18M6 6l12 12" />
-                        </svg>
-                      </button>
+                <li
+                  key={item.key}
+                  className="animate-item-in rounded-2xl border border-border bg-surface-1 p-3"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div className="flex gap-3">
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-border bg-surface-2">
+                      {img ? (
+                        <Image src={img} alt={item.name} fill className="object-contain p-1.5" />
+                      ) : (
+                        <span className="flex h-full items-center justify-center text-text-muted">
+                          <ShoppingBag size={18} strokeWidth={1.5} />
+                        </span>
+                      )}
                     </div>
-                    {item.variantLabel && <span className="text-xs text-text-muted">{item.variantLabel}</span>}
-
-                    <div className="flex items-center gap-2 mt-1">
-                      <div className="flex items-center rounded-lg border border-border">
+                    <div className="flex flex-1 flex-col gap-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <Link
+                          href={`/produto/${item.slug}`}
+                          onClick={onClose}
+                          className="text-sm font-medium leading-snug line-clamp-2 hover:text-aki-green-400"
+                        >
+                          {item.name}
+                        </Link>
                         <button
                           type="button"
-                          onClick={() => updateQuantity(item.key, item.quantity - 1)}
-                          disabled={item.quantity <= 1}
-                          aria-label="Diminuir quantidade"
-                          className="px-2 py-1 text-text-muted hover:text-text disabled:opacity-40"
+                          onClick={() => removeItem(item.key)}
+                          aria-label={`Remover ${item.name}`}
+                          className="shrink-0 rounded-lg p-1 text-text-muted transition-colors hover:bg-danger/10 hover:text-danger"
                         >
-                          −
-                        </button>
-                        <span className="min-w-6 text-center text-sm">{item.quantity}</span>
-                        <button
-                          type="button"
-                          onClick={() => updateQuantity(item.key, item.quantity + 1)}
-                          aria-label="Aumentar quantidade"
-                          className="px-2 py-1 text-text-muted hover:text-text"
-                        >
-                          +
+                          <Trash2 size={15} strokeWidth={2} />
                         </button>
                       </div>
+                      {item.variantLabel && (
+                        <span className="w-fit rounded-md bg-surface-2 px-1.5 py-0.5 text-[11px] text-text-muted">
+                          {item.variantLabel}
+                        </span>
+                      )}
+                      <span className="font-heading text-sm font-semibold text-aki-green-400">
+                        {formatPrice(cartItemLineTotal(item))}
+                      </span>
+                    </div>
+                  </div>
 
-                      <select
-                        value={item.condition}
-                        onChange={(e) => updateCondition(item.key, e.target.value as 'pix' | 'parcelado')}
-                        aria-label={`Condição de pagamento para ${item.name}`}
-                        className="rounded-lg border border-border bg-surface-1 px-2 py-1 text-xs text-text"
+                  <div className="mt-3 flex items-center justify-between gap-2">
+                    <div className="flex items-center rounded-lg border border-border bg-surface-2">
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(item.key, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                        aria-label="Diminuir quantidade"
+                        className="p-1.5 text-text-muted transition-colors hover:text-text disabled:opacity-30 disabled:hover:text-text-muted"
                       >
-                        <option value="pix">Pix</option>
-                        {item.installments && item.installments > 1 && (
-                          <option value="parcelado">{item.installments}x</option>
-                        )}
-                      </select>
+                        <Minus size={13} strokeWidth={2.5} />
+                      </button>
+                      <span className="min-w-6 text-center text-xs font-medium">{item.quantity}</span>
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(item.key, item.quantity + 1)}
+                        aria-label="Aumentar quantidade"
+                        className="p-1.5 text-text-muted transition-colors hover:text-text"
+                      >
+                        <Plus size={13} strokeWidth={2.5} />
+                      </button>
                     </div>
 
-                    <span className="text-sm font-semibold text-aki-green-400">
-                      {formatPrice(cartItemLineTotal(item))}
-                    </span>
+                    {item.installments && item.installments > 1 ? (
+                      <div className="flex rounded-lg border border-border bg-surface-2 p-0.5 text-[11px]">
+                        <button
+                          type="button"
+                          onClick={() => updateCondition(item.key, 'pix')}
+                          aria-pressed={item.condition === 'pix'}
+                          className={clsx(
+                            'rounded-md px-2 py-1 font-medium transition-colors',
+                            item.condition === 'pix' ? 'bg-aki-green-500/15 text-aki-green-400' : 'text-text-muted hover:text-text',
+                          )}
+                        >
+                          Pix
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => updateCondition(item.key, 'parcelado')}
+                          aria-pressed={item.condition === 'parcelado'}
+                          className={clsx(
+                            'rounded-md px-2 py-1 font-medium transition-colors',
+                            item.condition === 'parcelado' ? 'bg-aki-green-500/15 text-aki-green-400' : 'text-text-muted hover:text-text',
+                          )}
+                        >
+                          {item.installments}x
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-[11px] text-text-muted">à vista no Pix</span>
+                    )}
                   </div>
                 </li>
               );
@@ -135,10 +193,16 @@ export function CartDrawer({ open, onClose, whatsappNumber }: CartDrawerProps) {
             <p className="text-xs text-text-muted">
               Esta seleção não é uma cobrança. Você vai confirmar a compra e as condições diretamente com a loja pelo WhatsApp.
             </p>
-            <button type="button" onClick={checkout} className={buttonStyles('whatsapp', 'lg', 'w-full')}>
+            <button type="button" onClick={checkout} className={buttonStyles('whatsapp', 'lg', 'w-full gap-2')}>
+              <WhatsAppIcon size={18} />
               Finalizar no WhatsApp
             </button>
-            <button type="button" onClick={clear} className={buttonStyles('ghost', 'sm', 'w-full')}>
+            <button
+              type="button"
+              onClick={clear}
+              className={buttonStyles('ghost', 'sm', 'w-full gap-1.5')}
+            >
+              <Trash2 size={14} strokeWidth={2} />
               Esvaziar seleção
             </button>
           </div>

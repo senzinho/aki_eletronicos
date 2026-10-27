@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
+import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { Input, Textarea } from '../ui/Field';
 import { buttonStyles } from '../ui/button-styles';
 import { ApiError, serviceRequests } from '../../lib/api';
@@ -41,7 +42,10 @@ export function ContactForm({ type, extraFields }: ContactFormProps) {
 
   if (status === 'success') {
     return (
-      <div role="status" className="rounded-2xl border border-aki-green-500/30 bg-aki-green-500/10 p-6 text-center">
+      <div role="status" className="animate-item-in rounded-2xl border border-aki-green-500/30 bg-aki-green-500/10 p-6 text-center">
+        <span className="animate-pop mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-aki-green-500/15 text-aki-green-400">
+          <CheckCircle2 size={24} strokeWidth={2} />
+        </span>
         <p className="font-heading text-base font-semibold text-text mb-1">Recebemos sua solicitação!</p>
         <p className="text-sm text-text-muted">
           Nossa equipe vai entrar em contato pelo telefone ou e-mail informado. Para uma resposta mais rápida,
@@ -68,12 +72,14 @@ export function ContactForm({ type, extraFields }: ContactFormProps) {
       <Textarea id="message" name="message" label="Mensagem" rows={4} />
 
       {status === 'error' && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="flex items-center gap-1.5 text-sm text-danger">
+          <AlertCircle size={15} strokeWidth={2} />
           {errorMessage}
         </p>
       )}
 
-      <button type="submit" disabled={status === 'loading'} className={buttonStyles('primary', 'lg')}>
+      <button type="submit" disabled={status === 'loading'} className={buttonStyles('primary', 'lg', 'gap-2')}>
+        {status === 'loading' && <Loader2 size={17} strokeWidth={2.5} className="animate-spin" />}
         {status === 'loading' ? 'Enviando...' : extraFields === 'reparo' ? 'Solicitar orçamento' : 'Enviar mensagem'}
       </button>
     </form>

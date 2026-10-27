@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
+import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import { categories, settings, socialLinks } from '../../lib/api';
 import { assetUrl } from '../../lib/asset-url';
 import { buildWhatsAppLink } from '../../lib/whatsapp';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
 const SOCIAL_ICON: Record<string, ReactNode> = {
   instagram: (
@@ -53,7 +55,7 @@ export async function SiteFooter() {
                   target="_blank"
                   rel="noopener"
                   aria-label={link.platform}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-text-muted hover:border-aki-green-500 hover:text-aki-green-400"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-text-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-aki-green-500 hover:text-aki-green-400"
                 >
                   {SOCIAL_ICON[link.platform] ?? link.platform[0]?.toUpperCase()}
                 </a>
@@ -65,38 +67,62 @@ export async function SiteFooter() {
         <div className="flex flex-col gap-2">
           <h3 className="font-heading text-sm font-semibold text-text">Categorias</h3>
           {categoryList.map((c) => (
-            <Link key={c.id} href={`/categoria/${c.slug}`} className="text-sm text-text-muted hover:text-aki-green-400">
+            <Link key={c.id} href={`/categoria/${c.slug}`} className="w-fit text-sm text-text-muted transition-colors hover:text-aki-green-400">
               {c.name}
             </Link>
           ))}
-          <Link href="/ofertas" className="text-sm text-text-muted hover:text-aki-green-400">
+          <Link href="/ofertas" className="w-fit text-sm text-text-muted transition-colors hover:text-aki-green-400">
             Ofertas
           </Link>
         </div>
 
         <div className="flex flex-col gap-2">
           <h3 className="font-heading text-sm font-semibold text-text">Institucional</h3>
-          <Link href="/sobre" className="text-sm text-text-muted hover:text-aki-green-400">
+          <Link href="/sobre" className="w-fit text-sm text-text-muted transition-colors hover:text-aki-green-400">
             Sobre a loja
           </Link>
-          <Link href="/reparos" className="text-sm text-text-muted hover:text-aki-green-400">
+          <Link href="/reparos" className="w-fit text-sm text-text-muted transition-colors hover:text-aki-green-400">
             Assistência técnica
           </Link>
-          <Link href="/contato" className="text-sm text-text-muted hover:text-aki-green-400">
+          <Link href="/contato" className="w-fit text-sm text-text-muted transition-colors hover:text-aki-green-400">
             Contato
           </Link>
-          <a href={whatsappHref} target="_blank" rel="noopener" className="text-sm text-text-muted hover:text-aki-green-400">
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener"
+            className="inline-flex w-fit items-center gap-1.5 text-sm text-text-muted transition-colors hover:text-aki-green-400"
+          >
+            <WhatsAppIcon size={14} />
             Falar no WhatsApp
           </a>
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2.5">
           <h3 className="font-heading text-sm font-semibold text-text">Contato</h3>
-          {siteSettings.endereco && <p className="text-sm text-text-muted">{siteSettings.endereco}</p>}
-          {siteSettings.telefone && <p className="text-sm text-text-muted">{siteSettings.telefone}</p>}
-          {siteSettings.email && <p className="text-sm text-text-muted">{siteSettings.email}</p>}
+          {siteSettings.endereco && (
+            <p className="flex items-start gap-2 text-sm text-text-muted">
+              <MapPin size={15} strokeWidth={1.8} className="mt-0.5 shrink-0" />
+              {siteSettings.endereco}
+            </p>
+          )}
+          {siteSettings.telefone && (
+            <p className="flex items-center gap-2 text-sm text-text-muted">
+              <Phone size={15} strokeWidth={1.8} className="shrink-0" />
+              {siteSettings.telefone}
+            </p>
+          )}
+          {siteSettings.email && (
+            <p className="flex items-center gap-2 text-sm text-text-muted">
+              <Mail size={15} strokeWidth={1.8} className="shrink-0" />
+              {siteSettings.email}
+            </p>
+          )}
           {siteSettings.horario_atendimento && (
-            <p className="text-sm text-text-muted">{siteSettings.horario_atendimento}</p>
+            <p className="flex items-start gap-2 text-sm text-text-muted">
+              <Clock size={15} strokeWidth={1.8} className="mt-0.5 shrink-0" />
+              {siteSettings.horario_atendimento}
+            </p>
           )}
         </div>
       </div>

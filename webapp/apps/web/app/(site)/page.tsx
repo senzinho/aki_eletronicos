@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Star } from 'lucide-react';
 import { buttonStyles } from '../../components/ui/button-styles';
 import { Card } from '../../components/ui/Card';
+import { Reveal } from '../../components/ui/Reveal';
 import { ProductCard } from '../../components/site/ProductCard';
 import { HeroWhatsAppButton } from '../../components/site/HeroWhatsAppButton';
 import { assetUrl } from '../../lib/asset-url';
@@ -72,16 +74,17 @@ export default async function HomePage() {
             <div className="h-full w-full bg-gradient-to-br from-surface-1 via-bg to-surface-2 opacity-80" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/60 to-transparent" />
+          <div className="absolute -top-24 right-[-10%] h-80 w-80 rounded-full bg-aki-green-500/10 blur-3xl animate-float" />
         </div>
 
         <div className="relative mx-auto flex min-h-[520px] max-w-[1200px] flex-col justify-center gap-6 px-4 py-24 sm:px-6">
-          <h1 className="max-w-xl font-heading text-4xl font-bold leading-[1.05] tracking-tight text-text sm:text-5xl">
+          <h1 className="animate-item-in max-w-xl font-heading text-4xl font-bold leading-[1.05] tracking-tight text-text sm:text-5xl">
             Seu próximo dispositivo está aqui.
           </h1>
-          <p className="max-w-md text-base text-text-muted sm:text-lg">
+          <p className="animate-item-in max-w-md text-base text-text-muted sm:text-lg" style={{ animationDelay: '90ms' }}>
             Explore celulares, acessórios e tecnologia em um só lugar.
           </p>
-          <div className="flex flex-wrap gap-3 mt-2">
+          <div className="animate-item-in flex flex-wrap gap-3 mt-2" style={{ animationDelay: '170ms' }}>
             <Link href="/produtos" className={buttonStyles('primary', 'lg')}>
               Explorar produtos
             </Link>
@@ -93,10 +96,10 @@ export default async function HomePage() {
       {/* APRESENTAÇÃO DA LOJA */}
       <section className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
         <div className="grid items-center gap-10 md:grid-cols-2">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border">
+          <Reveal className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border">
             <Image src={lojaPhoto} alt="Loja Aki Eletrônicos" fill className="object-cover" sizes="(min-width: 768px) 560px, 100vw" />
-          </div>
-          <div className="flex flex-col gap-4">
+          </Reveal>
+          <Reveal delay={100} className="flex flex-col gap-4">
             <h2 className="font-heading text-2xl font-bold sm:text-3xl">Conheça a Aki Eletrônicos</h2>
             <p className="text-text-muted leading-relaxed">
               Somos especialistas em assistência técnica de celulares e informática, oferecendo serviços ágeis,
@@ -110,7 +113,7 @@ export default async function HomePage() {
             <Link href="/sobre" className={buttonStyles('secondary', 'md', 'self-start')}>
               Conhecer a loja
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -118,14 +121,18 @@ export default async function HomePage() {
       {categoryList.length > 0 && (
         <section className="border-t border-border bg-surface-1/40">
           <div className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
-            <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8">Explore por categoria</h2>
+            <Reveal>
+              <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8">Explore por categoria</h2>
+            </Reveal>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-              {categoryList.map((c) => (
-                <Link key={c.id} href={`/categoria/${c.slug}`}>
-                  <Card className="flex flex-col items-center gap-3 p-6 text-center hover:border-aki-green-500/60 hover:-translate-y-1">
-                    <span className="font-heading text-sm font-semibold text-text">{c.name}</span>
-                  </Card>
-                </Link>
+              {categoryList.map((c, i) => (
+                <Reveal key={c.id} delay={i * 60}>
+                  <Link href={`/categoria/${c.slug}`}>
+                    <Card className="flex flex-col items-center gap-3 p-6 text-center transition-all duration-300 hover:border-aki-green-500/60 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(47,211,92,0.1)]">
+                      <span className="font-heading text-sm font-semibold text-text">{c.name}</span>
+                    </Card>
+                  </Link>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -135,15 +142,17 @@ export default async function HomePage() {
       {/* DESTAQUES */}
       {featured.items.length > 0 && (
         <section className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
-          <div className="flex items-end justify-between mb-8">
+          <Reveal className="flex items-end justify-between mb-8">
             <h2 className="font-heading text-2xl font-bold sm:text-3xl">Produtos em destaque</h2>
-            <Link href="/produtos" className="text-sm font-medium text-aki-green-400 hover:text-aki-green-300">
+            <Link href="/produtos" className="text-sm font-medium text-aki-green-400 transition-colors hover:text-aki-green-300">
               Ver todos
             </Link>
-          </div>
+          </Reveal>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {featured.items.map((p) => (
-              <ProductCard key={p.id} product={p} whatsappNumber={whatsappNumber} siteUrl={siteUrl} />
+            {featured.items.map((p, i) => (
+              <Reveal key={p.id} delay={Math.min(i, 7) * 60}>
+                <ProductCard product={p} whatsappNumber={whatsappNumber} siteUrl={siteUrl} />
+              </Reveal>
             ))}
           </div>
         </section>
@@ -153,10 +162,14 @@ export default async function HomePage() {
       {onSale.items.length > 0 && (
         <section className="border-t border-border bg-surface-1/40">
           <div className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
-            <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8">Ofertas que merecem sua atenção</h2>
+            <Reveal>
+              <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8">Ofertas que merecem sua atenção</h2>
+            </Reveal>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-              {onSale.items.map((p) => (
-                <ProductCard key={p.id} product={p} whatsappNumber={whatsappNumber} siteUrl={siteUrl} />
+              {onSale.items.map((p, i) => (
+                <Reveal key={p.id} delay={Math.min(i, 7) * 60}>
+                  <ProductCard product={p} whatsappNumber={whatsappNumber} siteUrl={siteUrl} />
+                </Reveal>
               ))}
             </div>
           </div>
@@ -165,15 +178,19 @@ export default async function HomePage() {
 
       {/* DIFERENCIAIS */}
       <section className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
-        <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8 text-center">
-          Uma experiência de compra simples
-        </h2>
+        <Reveal>
+          <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8 text-center">
+            Uma experiência de compra simples
+          </h2>
+        </Reveal>
         <div className="grid gap-5 sm:grid-cols-3">
-          {DIFERENCIAIS.map((d) => (
-            <Card key={d.title} className="p-6">
-              <h3 className="font-heading text-base font-semibold mb-2">{d.title}</h3>
-              <p className="text-sm text-text-muted leading-relaxed">{d.description}</p>
-            </Card>
+          {DIFERENCIAIS.map((d, i) => (
+            <Reveal key={d.title} delay={i * 80}>
+              <Card className="p-6 transition-all duration-300 hover:border-aki-green-500/40 hover:-translate-y-0.5">
+                <h3 className="font-heading text-base font-semibold mb-2">{d.title}</h3>
+                <p className="text-sm text-text-muted leading-relaxed">{d.description}</p>
+              </Card>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -182,23 +199,25 @@ export default async function HomePage() {
       {testimonialList.length > 0 && (
         <section className="border-t border-border bg-surface-1/40">
           <div className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
-            <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8">Quem compra, recomenda</h2>
+            <Reveal>
+              <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8">Quem compra, recomenda</h2>
+            </Reveal>
             <div className="grid gap-5 sm:grid-cols-3">
-              {testimonialList.map((t) => (
-                <Card key={t.id} className="p-6">
-                  <div className="flex gap-0.5 mb-3 text-aki-green-400" aria-label={`${t.rating} de 5 estrelas`}>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <svg key={i} viewBox="0 0 24 24" width="14" height="14" fill={i < t.rating ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.5">
-                        <path d="M12 2.5l2.9 6.3 6.9.7-5.2 4.6 1.6 6.8L12 17.7 5.8 20.9l1.6-6.8-5.2-4.6 6.9-.7z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <p className="text-sm text-text-muted leading-relaxed mb-3">&ldquo;{t.comment}&rdquo;</p>
-                  <p className="text-sm font-medium text-text">
-                    {t.authorName}
-                    {t.context && <span className="text-text-muted font-normal"> — {t.context}</span>}
-                  </p>
-                </Card>
+              {testimonialList.map((t, i) => (
+                <Reveal key={t.id} delay={i * 80}>
+                  <Card className="p-6 transition-all duration-300 hover:border-aki-green-500/40">
+                    <div className="flex gap-0.5 mb-3 text-warning" aria-label={`${t.rating} de 5 estrelas`}>
+                      {Array.from({ length: 5 }).map((_, idx) => (
+                        <Star key={idx} size={14} strokeWidth={1.5} fill={idx < t.rating ? 'currentColor' : 'none'} />
+                      ))}
+                    </div>
+                    <p className="text-sm text-text-muted leading-relaxed mb-3">&ldquo;{t.comment}&rdquo;</p>
+                    <p className="text-sm font-medium text-text">
+                      {t.authorName}
+                      {t.context && <span className="text-text-muted font-normal"> — {t.context}</span>}
+                    </p>
+                  </Card>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -206,7 +225,7 @@ export default async function HomePage() {
       )}
 
       {/* CTA FINAL */}
-      <section className="mx-auto max-w-[1200px] px-4 py-20 text-center sm:px-6">
+      <Reveal className="mx-auto max-w-[1200px] px-4 py-20 text-center sm:px-6">
         <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-3">Encontrou o que procurava?</h2>
         <p className="text-text-muted mb-8 max-w-md mx-auto">
           Escolha seu produto e converse com a Aki Eletrônicos para finalizar sua compra.
@@ -217,7 +236,7 @@ export default async function HomePage() {
           </Link>
           <HeroWhatsAppButton whatsappNumber={whatsappNumber} variant="secondary" />
         </div>
-      </section>
+      </Reveal>
     </>
   );
 }
