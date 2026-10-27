@@ -3,6 +3,7 @@ import { PromoBar } from '../../components/site/PromoBar';
 import { SiteHeader } from '../../components/site/SiteHeader';
 import { SiteFooter } from '../../components/site/SiteFooter';
 import { WhatsAppFloating } from '../../components/site/WhatsAppFloating';
+import { CustomBodyScripts, GtmNoscript, ThirdPartyScripts } from '../../components/site/ThirdPartyScripts';
 import { settings } from '../../lib/api';
 import { assetUrl } from '../../lib/asset-url';
 
@@ -26,6 +27,8 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
 
   return (
     <>
+      <ThirdPartyScripts gtmId={s.gtm_id || undefined} ga4Id={s.ga4_id || undefined} customHead={s.custom_scripts_head || undefined} />
+      <GtmNoscript gtmId={s.gtm_id || undefined} />
       <PromoBar />
       <SiteHeader />
       <main className="flex-1">{children}</main>
@@ -36,6 +39,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
+      <CustomBodyScripts html={s.custom_scripts_body || undefined} />
     </>
   );
 }

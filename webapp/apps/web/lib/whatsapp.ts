@@ -32,14 +32,14 @@ export function buildSingleProductMessage(item: WhatsAppMessageItem): string {
   const lines = [
     'Olá! Vim pelo site da Aki Eletrônicos e gostaria de consultar a disponibilidade deste produto.',
     '',
-    `Produto: ${item.name}`,
+    `Produto: *${item.name}*`,
   ];
   if (item.brandName) lines.push(`Marca: ${item.brandName}`);
   if (item.variantLabel) lines.push(`Variante: ${item.variantLabel}`);
   lines.push(
     `Quantidade: ${item.quantity}`,
     `Preço unitário: ${formatPrice(item.unitPrice)}`,
-    `Total: ${formatPrice(total)}`,
+    `*Total: ${formatPrice(total)}*`,
     `Pagamento escolhido: ${formatCondition(item)}`,
     '',
     `Link do produto: ${item.productUrl}`,
@@ -59,7 +59,7 @@ export function buildCartMessage(items: WhatsAppMessageItem[]): string {
   items.forEach((item, index) => {
     const total = item.unitPrice * item.quantity;
     grandTotal += total;
-    lines.push(`${index + 1}) ${item.name}${item.variantLabel ? ` — ${item.variantLabel}` : ''}`);
+    lines.push(`*${index + 1}) ${item.name}${item.variantLabel ? ` — ${item.variantLabel}` : ''}*`);
     lines.push(`   Quantidade: ${item.quantity}`);
     lines.push(`   Preço unitário: ${formatPrice(item.unitPrice)}`);
     lines.push(`   Total: ${formatPrice(total)}`);
@@ -68,7 +68,7 @@ export function buildCartMessage(items: WhatsAppMessageItem[]): string {
     lines.push('');
   });
 
-  lines.push(`Total geral: ${formatPrice(grandTotal)}`);
+  lines.push(`*Total geral: ${formatPrice(grandTotal)}*`);
   lines.push('');
   lines.push('Poderiam confirmar a disponibilidade e as condições para finalizar a compra?');
 

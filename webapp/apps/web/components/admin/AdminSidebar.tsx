@@ -17,6 +17,7 @@ const NAV = [
   { href: '/admin/links-sociais', label: 'Redes sociais' },
   { href: '/admin/solicitacoes', label: 'Solicitações' },
   { href: '/admin/configuracoes', label: 'Configurações' },
+  { href: '/admin/integracoes', label: 'Integrações' },
 ];
 
 export function AdminSidebar({ admin }: { admin: AdminInfo }) {

@@ -81,8 +81,8 @@ export function ProductCard({ product, whatsappNumber, siteUrl }: ProductCardPro
           )}
         </div>
 
-        <div className="mt-auto flex gap-2 pt-3">
-          <Link href={`/produto/${product.slug}`} className={buttonStyles('secondary', 'sm', 'flex-1')}>
+        <div className="mt-auto flex flex-col gap-2 pt-3">
+          <Link href={`/produto/${product.slug}`} className={buttonStyles('secondary', 'sm', 'whitespace-nowrap')}>
             Ver detalhes
           </Link>
           <a
@@ -90,7 +90,7 @@ export function ProductCard({ product, whatsappNumber, siteUrl }: ProductCardPro
             target="_blank"
             rel="noopener"
             onClick={() => analytics.track({ eventType: 'whatsapp_click', productId: product.id })}
-            className={buttonStyles('whatsapp', 'sm', 'flex-1')}
+            className={buttonStyles('whatsapp', 'sm', 'whitespace-nowrap')}
           >
             Comprar
           </a>
