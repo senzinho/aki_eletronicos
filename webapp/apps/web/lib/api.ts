@@ -33,15 +33,27 @@ export class ApiError extends Error {
 
 interface FetchOptions extends RequestInit {
   revalidate?: number | false;
+  /** Forwards the incoming request's cookies when running on the server (admin/session-dependent calls only — marks the route dynamic). */
+  auth?: boolean;
+}
+
+async function serverCookieHeader(): Promise<Record<string, string>> {
+  if (typeof window !== 'undefined') return {};
+  const { cookies } = await import('next/headers');
+  const jar = await cookies();
+  const value = jar.toString();
+  return value ? { cookie: value } : {};
 }
 
 async function apiFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
-  const { revalidate, headers, ...rest } = options;
+  const { revalidate, headers, auth: needsAuth, ...rest } = options;
+  const cookieHeader = needsAuth ? await serverCookieHeader() : {};
   const res = await fetch(`${baseUrl()}${path}`, {
     ...rest,
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
+      ...cookieHeader,
       ...headers,
     },
     ...(revalidate !== undefined ? { next: { revalidate: revalidate === false ? 0 : revalidate } } : {}),
@@ -102,7 +114,7 @@ export const auth = {
       body: JSON.stringify({ username, password }),
     }),
   logout: () => apiFetch<{ ok: boolean }>('/auth/logout', { method: 'POST' }),
-  me: () => apiFetch<{ admin: AdminInfo }>('/auth/me', { revalidate: false }),
+  me: () => apiFetch<{ admin: AdminInfo }>('/auth/me', { revalidate: false, auth: true }),
 };
 
 // ---------------------------------------------------------------
@@ -110,12 +122,12 @@ export const auth = {
 // ---------------------------------------------------------------
 export const categories = {
   list: () => apiFetch<Category[]>('/categories', { revalidate: 60 }),
-  listAdmin: () => apiFetch<Category[]>('/categories/admin', { revalidate: false }),
+  listAdmin: () => apiFetch<Category[]>('/categories/admin', { revalidate: false, auth: true }),
   create: (data: Partial<Category>) =>
-    apiFetch<Category>('/categories', { method: 'POST', body: JSON.stringify(data) }),
+    apiFetch<Category>('/categories', { method: 'POST', body: JSON.stringify(data), auth: true }),
   update: (id: number, data: Partial<Category>) =>
-    apiFetch<Category>(`/categories/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
-  remove: (id: number) => apiFetch<{ ok: boolean }>(`/categories/${id}`, { method: 'DELETE' }),
+    apiFetch<Category>(`/categories/${id}`, { method: 'PATCH', body: JSON.stringify(data), auth: true }),
+  remove: (id: number) => apiFetch<{ ok: boolean }>(`/categories/${id}`, { method: 'DELETE', auth: true }),
 };
 
 // ---------------------------------------------------------------
@@ -123,12 +135,12 @@ export const categories = {
 // ---------------------------------------------------------------
 export const brands = {
   list: () => apiFetch<Brand[]>('/brands', { revalidate: 60 }),
-  listAdmin: () => apiFetch<Brand[]>('/brands/admin', { revalidate: false }),
-  create: (data: Partial<Brand>) => apiFetch<Brand>('/brands', { method: 'POST', body: JSON.stringify(data) }),
+  listAdmin: () => apiFetch<Brand[]>('/brands/admin', { revalidate: false, auth: true }),
+  create: (data: Partial<Brand>) => apiFetch<Brand>('/brands', { method: 'POST', body: JSON.stringify(data), auth: true }),
   update: (id: number, data: Partial<Brand>) =>
-    apiFetch<Brand>(`/brands/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    apiFetch<Brand>(`/brands/${id}`, { method: 'PATCH', body: JSON.stringify(data), auth: true }),
   uploadLogo: (id: number, file: File) => apiUpload<Brand>(`/brands/${id}/logo`, file),
-  remove: (id: number) => apiFetch<{ ok: boolean }>(`/brands/${id}`, { method: 'DELETE' }),
+  remove: (id: number) => apiFetch<{ ok: boolean }>(`/brands/${id}`, { method: 'DELETE', auth: true }),
 };
 
 // ---------------------------------------------------------------
@@ -147,26 +159,34 @@ export interface ProductQuery {
   pageSize?: number;
 }
 
+export interface VariantInput {
+  color?: string;
+  storage?: string;
+  priceOverride?: number;
+  isAvailable?: boolean;
+  ordering?: number;
+}
+
 export const products = {
   list: (query: ProductQuery = {}) =>
     apiFetch<ProductListResponse>(`/products${qs(query)}`, { revalidate: 30 }),
   bySlug: (slug: string) => apiFetch<ProductDetailResponse>(`/products/${slug}`, { revalidate: 30 }),
-  listAdmin: () => apiFetch<Product[]>('/products/admin', { revalidate: false }),
-  getAdmin: (id: number) => apiFetch<Product>(`/products/admin/${id}`, { revalidate: false }),
+  listAdmin: () => apiFetch<Product[]>('/products/admin', { revalidate: false, auth: true }),
+  getAdmin: (id: number) => apiFetch<Product>(`/products/admin/${id}`, { revalidate: false, auth: true }),
   create: (data: Record<string, unknown>) =>
-    apiFetch<Product>('/products', { method: 'POST', body: JSON.stringify(data) }),
+    apiFetch<Product>('/products', { method: 'POST', body: JSON.stringify(data), auth: true }),
   update: (id: number, data: Record<string, unknown>) =>
-    apiFetch<Product>(`/products/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
-  remove: (id: number) => apiFetch<{ ok: boolean }>(`/products/${id}`, { method: 'DELETE' }),
+    apiFetch<Product>(`/products/${id}`, { method: 'PATCH', body: JSON.stringify(data), auth: true }),
+  remove: (id: number) => apiFetch<{ ok: boolean }>(`/products/${id}`, { method: 'DELETE', auth: true }),
   uploadMainImage: (id: number, file: File) => apiUpload<Product>(`/products/${id}/main-image`, file),
   addImage: (id: number, file: File) => apiUpload<Product>(`/products/${id}/images`, file),
-  removeImage: (imageId: number) => apiFetch<{ ok: boolean }>(`/products/images/${imageId}`, { method: 'DELETE' }),
-  addVariant: (id: number, data: Partial<ProductVariant>) =>
-    apiFetch<ProductVariant>(`/products/${id}/variants`, { method: 'POST', body: JSON.stringify(data) }),
-  updateVariant: (variantId: number, data: Partial<ProductVariant>) =>
-    apiFetch<ProductVariant>(`/products/variants/${variantId}`, { method: 'PATCH', body: JSON.stringify(data) }),
+  removeImage: (imageId: number) => apiFetch<{ ok: boolean }>(`/products/images/${imageId}`, { method: 'DELETE', auth: true }),
+  addVariant: (id: number, data: VariantInput) =>
+    apiFetch<ProductVariant>(`/products/${id}/variants`, { method: 'POST', body: JSON.stringify(data), auth: true }),
+  updateVariant: (variantId: number, data: VariantInput) =>
+    apiFetch<ProductVariant>(`/products/variants/${variantId}`, { method: 'PATCH', body: JSON.stringify(data), auth: true }),
   removeVariant: (variantId: number) =>
-    apiFetch<{ ok: boolean }>(`/products/variants/${variantId}`, { method: 'DELETE' }),
+    apiFetch<{ ok: boolean }>(`/products/variants/${variantId}`, { method: 'DELETE', auth: true }),
 };
 
 // ---------------------------------------------------------------
@@ -174,13 +194,13 @@ export const products = {
 // ---------------------------------------------------------------
 export const banners = {
   list: () => apiFetch<Banner[]>('/banners', { revalidate: 60 }),
-  listAdmin: () => apiFetch<Banner[]>('/banners/admin', { revalidate: false }),
-  create: (data: Partial<Banner>) => apiFetch<Banner>('/banners', { method: 'POST', body: JSON.stringify(data) }),
+  listAdmin: () => apiFetch<Banner[]>('/banners/admin', { revalidate: false, auth: true }),
+  create: (data: Partial<Banner>) => apiFetch<Banner>('/banners', { method: 'POST', body: JSON.stringify(data), auth: true }),
   update: (id: number, data: Partial<Banner>) =>
-    apiFetch<Banner>(`/banners/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    apiFetch<Banner>(`/banners/${id}`, { method: 'PATCH', body: JSON.stringify(data), auth: true }),
   uploadDesktop: (id: number, file: File) => apiUpload<Banner>(`/banners/${id}/image-desktop`, file),
   uploadMobile: (id: number, file: File) => apiUpload<Banner>(`/banners/${id}/image-mobile`, file),
-  remove: (id: number) => apiFetch<{ ok: boolean }>(`/banners/${id}`, { method: 'DELETE' }),
+  remove: (id: number) => apiFetch<{ ok: boolean }>(`/banners/${id}`, { method: 'DELETE', auth: true }),
 };
 
 // ---------------------------------------------------------------
@@ -188,12 +208,12 @@ export const banners = {
 // ---------------------------------------------------------------
 export const promotionalBars = {
   list: () => apiFetch<PromotionalBar[]>('/promotional-bars', { revalidate: 60 }),
-  listAdmin: () => apiFetch<PromotionalBar[]>('/promotional-bars/admin', { revalidate: false }),
+  listAdmin: () => apiFetch<PromotionalBar[]>('/promotional-bars/admin', { revalidate: false, auth: true }),
   create: (data: Partial<PromotionalBar>) =>
-    apiFetch<PromotionalBar>('/promotional-bars', { method: 'POST', body: JSON.stringify(data) }),
+    apiFetch<PromotionalBar>('/promotional-bars', { method: 'POST', body: JSON.stringify(data), auth: true }),
   update: (id: number, data: Partial<PromotionalBar>) =>
-    apiFetch<PromotionalBar>(`/promotional-bars/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
-  remove: (id: number) => apiFetch<{ ok: boolean }>(`/promotional-bars/${id}`, { method: 'DELETE' }),
+    apiFetch<PromotionalBar>(`/promotional-bars/${id}`, { method: 'PATCH', body: JSON.stringify(data), auth: true }),
+  remove: (id: number) => apiFetch<{ ok: boolean }>(`/promotional-bars/${id}`, { method: 'DELETE', auth: true }),
 };
 
 // ---------------------------------------------------------------
@@ -201,12 +221,12 @@ export const promotionalBars = {
 // ---------------------------------------------------------------
 export const socialLinks = {
   list: () => apiFetch<SocialLink[]>('/social-links', { revalidate: 60 }),
-  listAdmin: () => apiFetch<SocialLink[]>('/social-links/admin', { revalidate: false }),
+  listAdmin: () => apiFetch<SocialLink[]>('/social-links/admin', { revalidate: false, auth: true }),
   create: (data: Partial<SocialLink>) =>
-    apiFetch<SocialLink>('/social-links', { method: 'POST', body: JSON.stringify(data) }),
+    apiFetch<SocialLink>('/social-links', { method: 'POST', body: JSON.stringify(data), auth: true }),
   update: (id: number, data: Partial<SocialLink>) =>
-    apiFetch<SocialLink>(`/social-links/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
-  remove: (id: number) => apiFetch<{ ok: boolean }>(`/social-links/${id}`, { method: 'DELETE' }),
+    apiFetch<SocialLink>(`/social-links/${id}`, { method: 'PATCH', body: JSON.stringify(data), auth: true }),
+  remove: (id: number) => apiFetch<{ ok: boolean }>(`/social-links/${id}`, { method: 'DELETE', auth: true }),
 };
 
 // ---------------------------------------------------------------
@@ -215,7 +235,7 @@ export const socialLinks = {
 export const settings = {
   get: () => apiFetch<SiteSettings>('/settings', { revalidate: 60 }),
   update: (values: Record<string, string>) =>
-    apiFetch<SiteSettings>('/settings', { method: 'PATCH', body: JSON.stringify({ values }) }),
+    apiFetch<SiteSettings>('/settings', { method: 'PATCH', body: JSON.stringify({ values }), auth: true }),
   uploadImage: (key: string, file: File) => apiUpload<SiteSettings>(`/settings/upload/${key}`, file),
   uploadVideo: (key: string, file: File) => apiUpload<SiteSettings>(`/settings/upload-video/${key}`, file),
 };
@@ -225,12 +245,12 @@ export const settings = {
 // ---------------------------------------------------------------
 export const testimonials = {
   list: () => apiFetch<Testimonial[]>('/testimonials', { revalidate: 60 }),
-  listAdmin: () => apiFetch<Testimonial[]>('/testimonials/admin', { revalidate: false }),
+  listAdmin: () => apiFetch<Testimonial[]>('/testimonials/admin', { revalidate: false, auth: true }),
   create: (data: Partial<Testimonial>) =>
-    apiFetch<Testimonial>('/testimonials', { method: 'POST', body: JSON.stringify(data) }),
+    apiFetch<Testimonial>('/testimonials', { method: 'POST', body: JSON.stringify(data), auth: true }),
   update: (id: number, data: Partial<Testimonial>) =>
-    apiFetch<Testimonial>(`/testimonials/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
-  remove: (id: number) => apiFetch<{ ok: boolean }>(`/testimonials/${id}`, { method: 'DELETE' }),
+    apiFetch<Testimonial>(`/testimonials/${id}`, { method: 'PATCH', body: JSON.stringify(data), auth: true }),
+  remove: (id: number) => apiFetch<{ ok: boolean }>(`/testimonials/${id}`, { method: 'DELETE', auth: true }),
 };
 
 // ---------------------------------------------------------------
@@ -246,11 +266,12 @@ export const serviceRequests = {
     problemType?: string;
     message?: string;
   }) => apiFetch<ServiceRequest>('/service-requests', { method: 'POST', body: JSON.stringify(data) }),
-  list: () => apiFetch<ServiceRequest[]>('/service-requests', { revalidate: false }),
+  list: () => apiFetch<ServiceRequest[]>('/service-requests', { revalidate: false, auth: true }),
   updateStatus: (id: number, status: ServiceRequest['status']) =>
     apiFetch<ServiceRequest>(`/service-requests/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
+      auth: true,
     }),
 };
 
