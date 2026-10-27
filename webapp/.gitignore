@@ -26,3 +26,7 @@ npm-debug.log*
 next-env.d.ts
 coverage/
 .vercel
+
+# uploaded files (keep folder structure, not the content)
+apps/api/uploads/*/*
+!apps/api/uploads/*/.gitkeep
