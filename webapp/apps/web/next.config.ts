@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
         pathname: "/uploads/**",
       },
     ],
+    // The API runs on localhost in dev; Next 16's SSRF guard blocks optimizing
+    // images from private/local IPs unless explicitly allowed. Safe here since
+    // it's our own trusted API — production will point at a real hostname.
+    dangerouslyAllowLocalIP: true,
   },
   turbopack: {
     rules: {

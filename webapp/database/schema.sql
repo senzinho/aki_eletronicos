@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
 INSERT INTO site_settings (setting_key, setting_value) VALUES
 ('nome_empresa', 'Aki Eletrônicos'),
 ('app_url', ''),
-('logo', '/images/logo.png'),
+('logo', ''),
 ('favicon', ''),
 ('whatsapp', '5541998132536'),
 ('telefone', '(41) 9813-2536'),

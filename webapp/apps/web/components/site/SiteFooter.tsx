@@ -1,11 +1,10 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import type { ReactNode } from 'react';
 import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import { categories, settings, socialLinks } from '../../lib/api';
-import { assetUrl } from '../../lib/asset-url';
 import { buildWhatsAppLink } from '../../lib/whatsapp';
 import { WhatsAppIcon } from './WhatsAppIcon';
+import { BrandMark } from './BrandMark';
 
 const SOCIAL_ICON: Record<string, ReactNode> = {
   instagram: (
@@ -28,7 +27,6 @@ export async function SiteFooter() {
   ]);
 
   const companyName = siteSettings.nome_empresa || 'Aki Eletrônicos';
-  const logo = assetUrl(siteSettings.logo || null);
   const whatsappHref = buildWhatsAppLink(
     siteSettings.whatsapp || '5541998132536',
     'Olá! Vim pelo site e gostaria de saber mais informações.',
@@ -38,11 +36,10 @@ export async function SiteFooter() {
     <footer className="border-t border-border bg-surface-1">
       <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-12 sm:px-6 md:grid-cols-4">
         <div className="flex flex-col gap-3 md:col-span-1">
-          {logo ? (
-            <Image src={logo} alt={companyName} width={150} height={34} className="h-8 w-auto object-contain" />
-          ) : (
+          <div className="flex items-center gap-2.5">
+            <BrandMark logoPath={siteSettings.logo || null} companyName={companyName} size={34} />
             <span className="font-heading text-lg font-bold">{companyName}</span>
-          )}
+          </div>
           <p className="text-sm text-text-muted">
             Smartphones, acessórios e assistência técnica especializada, com atendimento direto pelo WhatsApp.
           </p>
