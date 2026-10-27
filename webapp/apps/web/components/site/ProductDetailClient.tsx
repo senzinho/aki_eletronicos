@@ -13,6 +13,7 @@ import { assetUrl } from '../../lib/asset-url';
 import { buildSingleProductMessage, buildWhatsAppLink } from '../../lib/whatsapp';
 import { analytics } from '../../lib/api';
 import { useCartStore } from '../../lib/cart-store';
+import { STORE_MAX_INSTALLMENTS } from '../../lib/constants';
 import type { Product } from '../../lib/types';
 
 interface ProductDetailClientProps {
@@ -46,7 +47,11 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
   const [selectedStorage, setSelectedStorage] = useState<string | undefined>(storages[0]);
   const [quantity, setQuantity] = useState(1);
   const [condition, setCondition] = useState<'pix' | 'parcelado'>('pix');
+  const [installments, setInstallments] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
+
+  const maxInstallments =
+    product.installmentMax && product.installmentMax > 1 ? product.installmentMax : STORE_MAX_INSTALLMENTS;
 
   const matchedVariant =
     variants.length > 0
@@ -64,7 +69,6 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
     ? Number(matchedVariant.priceOverride)
     : Number(product.pricePix ?? product.priceTo);
   const unitPrice = condition === 'pix' ? basePricePix : basePriceFull;
-  const hasInstallments = Boolean(product.installmentMax && product.installmentMax > 1);
 
   const variantLabel = [selectedColor, selectedStorage].filter(Boolean).join(' · ') || null;
   const productUrl = `${siteUrl}/produto/${product.slug}`;
@@ -80,7 +84,7 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
       quantity,
       unitPrice,
       condition,
-      installments: condition === 'parcelado' ? product.installmentMax : undefined,
+      installments: condition === 'parcelado' ? installments : undefined,
       installmentInterestFree: product.installmentInterestFree,
       productUrl,
     });
@@ -100,7 +104,8 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
       unitPricePix: basePricePix,
       unitPriceFull: basePriceFull,
       condition,
-      installments: condition === 'parcelado' ? product.installmentMax : undefined,
+      installments: condition === 'parcelado' ? installments : undefined,
+      installmentMax: maxInstallments,
       installmentInterestFree: product.installmentInterestFree,
     });
     setJustAdded(true);
@@ -185,12 +190,15 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
           {product.priceFrom && <span className="text-sm text-text-muted line-through">{formatPrice(product.priceFrom)}</span>}
           <span className="font-heading text-3xl font-bold text-aki-green-400">{formatPrice(unitPrice)}</span>
           <span className="text-xs text-text-muted">
-            {condition === 'pix' ? 'à vista no Pix' : 'no cartão / outras condições'}
+            {condition === 'pix'
+              ? 'à vista no Pix'
+              : installments > 1
+                ? `no cartão, em ${installments}x de ${installmentValue(basePriceFull, installments)}`
+                : 'no cartão, à vista'}
           </span>
-          {hasInstallments && (
+          {condition !== 'parcelado' && (
             <span className="text-xs text-text-muted">
-              ou {product.installmentMax}x de {installmentValue(basePriceFull, product.installmentMax!)}
-              {product.installmentInterestFree ? ' sem juros' : ' com juros'}
+              ou em até {maxInstallments}x no cartão {product.installmentInterestFree === false ? 'com juros' : 'sem juros'}
             </span>
           )}
           {product.installmentNote && <span className="text-xs text-text-muted">{product.installmentNote}</span>}
@@ -266,22 +274,42 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
             >
               Pix à vista
             </button>
-            {hasInstallments && (
-              <button
-                type="button"
-                onClick={() => setCondition('parcelado')}
-                aria-pressed={condition === 'parcelado'}
-                className={clsx(
-                  'flex-1 rounded-xl border px-3.5 py-2.5 text-sm transition-all duration-200',
-                  condition === 'parcelado'
-                    ? 'border-aki-green-500 bg-aki-green-500/10 text-text shadow-[0_0_0_1px_var(--aki-green-500)]'
-                    : 'border-border text-text-muted hover:border-aki-green-500/50 hover:text-text',
-                )}
-              >
-                Parcelado
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setCondition('parcelado')}
+              aria-pressed={condition === 'parcelado'}
+              className={clsx(
+                'flex-1 rounded-xl border px-3.5 py-2.5 text-sm transition-all duration-200',
+                condition === 'parcelado'
+                  ? 'border-aki-green-500 bg-aki-green-500/10 text-text shadow-[0_0_0_1px_var(--aki-green-500)]'
+                  : 'border-border text-text-muted hover:border-aki-green-500/50 hover:text-text',
+              )}
+            >
+              Cartão
+            </button>
           </div>
+
+          {condition === 'parcelado' && (
+            <div className="flex flex-col gap-1.5 pt-1">
+              <label htmlFor="installments" className="text-xs font-medium text-text-muted">
+                Em quantas vezes?
+              </label>
+              <select
+                id="installments"
+                value={installments}
+                onChange={(e) => setInstallments(Number(e.target.value))}
+                className="w-full rounded-xl border border-border bg-surface-1 px-3.5 py-2.5 text-sm text-text focus-visible:outline-none focus-visible:border-aki-green-500 focus-visible:ring-2 focus-visible:ring-aki-green-500/30"
+              >
+                {Array.from({ length: maxInstallments }, (_, i) => i + 1).map((n) => (
+                  <option key={n} value={n}>
+                    {n === 1 ? 'À vista no cartão' : `${n}x de ${installmentValue(basePriceFull, n)}`}
+                    {n > 1 && (product.installmentInterestFree === false ? ' (com juros)' : ' (sem juros)')}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <p className="text-xs text-text-muted">
             Esta seleção não é uma cobrança nem uma confirmação de pagamento — serve para preparar sua consulta pelo WhatsApp.
           </p>

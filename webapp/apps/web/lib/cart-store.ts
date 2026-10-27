@@ -17,6 +17,7 @@ export interface CartItem {
   unitPriceFull: number;
   condition: PaymentCondition;
   installments?: number | null;
+  installmentMax?: number | null;
   installmentInterestFree?: boolean;
 }
 

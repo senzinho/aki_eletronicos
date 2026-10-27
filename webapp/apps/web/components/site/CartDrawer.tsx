@@ -8,10 +8,11 @@ import { Drawer } from '../ui/Drawer';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { buttonStyles } from '../ui/button-styles';
 import { cartItemLineTotal, cartItemUnitPrice, useCartStore } from '../../lib/cart-store';
-import { formatPrice } from '../../lib/format';
+import { formatPrice, installmentValue } from '../../lib/format';
 import { assetUrl } from '../../lib/asset-url';
 import { buildCartMessage, buildWhatsAppLink } from '../../lib/whatsapp';
 import { analytics } from '../../lib/api';
+import { STORE_MAX_INSTALLMENTS } from '../../lib/constants';
 
 interface CartDrawerProps {
   open: boolean;
@@ -151,35 +152,48 @@ export function CartDrawer({ open, onClose, whatsappNumber }: CartDrawerProps) {
                       </button>
                     </div>
 
-                    {item.installments && item.installments > 1 ? (
-                      <div className="flex rounded-lg border border-border bg-surface-2 p-0.5 text-[11px]">
-                        <button
-                          type="button"
-                          onClick={() => updateCondition(item.key, 'pix')}
-                          aria-pressed={item.condition === 'pix'}
-                          className={clsx(
-                            'rounded-md px-2 py-1 font-medium transition-colors',
-                            item.condition === 'pix' ? 'bg-aki-green-500/15 text-aki-green-400' : 'text-text-muted hover:text-text',
-                          )}
-                        >
-                          Pix
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => updateCondition(item.key, 'parcelado')}
-                          aria-pressed={item.condition === 'parcelado'}
-                          className={clsx(
-                            'rounded-md px-2 py-1 font-medium transition-colors',
-                            item.condition === 'parcelado' ? 'bg-aki-green-500/15 text-aki-green-400' : 'text-text-muted hover:text-text',
-                          )}
-                        >
-                          {item.installments}x
-                        </button>
-                      </div>
-                    ) : (
-                      <span className="text-[11px] text-text-muted">à vista no Pix</span>
-                    )}
+                    <div className="flex rounded-lg border border-border bg-surface-2 p-0.5 text-[11px]">
+                      <button
+                        type="button"
+                        onClick={() => updateCondition(item.key, 'pix')}
+                        aria-pressed={item.condition === 'pix'}
+                        className={clsx(
+                          'rounded-md px-2 py-1 font-medium transition-colors',
+                          item.condition === 'pix' ? 'bg-aki-green-500/15 text-aki-green-400' : 'text-text-muted hover:text-text',
+                        )}
+                      >
+                        Pix
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => updateCondition(item.key, 'parcelado', item.installments ?? 1)}
+                        aria-pressed={item.condition === 'parcelado'}
+                        className={clsx(
+                          'rounded-md px-2 py-1 font-medium transition-colors',
+                          item.condition === 'parcelado' ? 'bg-aki-green-500/15 text-aki-green-400' : 'text-text-muted hover:text-text',
+                        )}
+                      >
+                        Cartão
+                      </button>
+                    </div>
                   </div>
+
+                  {item.condition === 'parcelado' && (
+                    <div className="mt-2">
+                      <select
+                        value={item.installments ?? 1}
+                        onChange={(e) => updateCondition(item.key, 'parcelado', Number(e.target.value))}
+                        aria-label={`Parcelas para ${item.name}`}
+                        className="w-full rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-text"
+                      >
+                        {Array.from({ length: item.installmentMax || STORE_MAX_INSTALLMENTS }, (_, i) => i + 1).map((n) => (
+                          <option key={n} value={n}>
+                            {n === 1 ? 'À vista no cartão' : `${n}x de ${installmentValue(item.unitPriceFull, n)}`}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </li>
               );
             })}

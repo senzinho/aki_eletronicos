@@ -76,7 +76,17 @@ export function ProductForm({ brands, categories, product, onSubmit, submitLabel
       <Input id="pricePix" name="pricePix" label="Preço à vista no Pix (opcional)" type="number" step="0.01" min={0} defaultValue={product?.pricePix ?? ''} hint="Se vazio, usa o preço atual." />
 
       <div className="grid grid-cols-2 gap-4">
-        <Input id="installmentMax" name="installmentMax" label="Parcelas (máx.)" type="number" min={1} defaultValue={product?.installmentMax ?? ''} />
+        <Input
+          id="installmentMax"
+          name="installmentMax"
+          label="Parcelas (máx.)"
+          type="number"
+          min={1}
+          max={18}
+          placeholder="18"
+          hint="Se vazio, usa o padrão da loja: até 18x."
+          defaultValue={product?.installmentMax ?? ''}
+        />
         <label className="flex items-center gap-2 text-sm text-text mt-6">
           <input type="checkbox" name="installmentInterestFree" defaultChecked={product?.installmentInterestFree ?? true} className="h-4 w-4 accent-aki-green-500" />
           Parcelamento sem juros

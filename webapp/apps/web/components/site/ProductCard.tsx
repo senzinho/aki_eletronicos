@@ -11,6 +11,7 @@ import { assetUrl } from '../../lib/asset-url';
 import { buildSingleProductMessage, buildWhatsAppLink } from '../../lib/whatsapp';
 import { analytics } from '../../lib/api';
 import { WhatsAppIcon } from './WhatsAppIcon';
+import { STORE_MAX_INSTALLMENTS } from '../../lib/constants';
 import type { Product } from '../../lib/types';
 
 interface ProductCardProps {
@@ -26,6 +27,8 @@ export function ProductCard({ product, whatsappNumber, siteUrl }: ProductCardPro
   const showCardPixNote = product.pricePix && product.pricePix !== product.priceTo;
 
   const productUrl = `${siteUrl}/produto/${product.slug}`;
+  const maxInstallments =
+    product.installmentMax && product.installmentMax > 1 ? product.installmentMax : STORE_MAX_INSTALLMENTS;
 
   const whatsappHref = buildWhatsAppLink(
     whatsappNumber,
@@ -78,12 +81,10 @@ export function ProductCard({ product, whatsappNumber, siteUrl }: ProductCardPro
           {showCardPixNote && (
             <span className="text-xs text-text-muted">à vista no Pix</span>
           )}
-          {product.installmentMax && product.installmentMax > 1 && (
-            <span className="text-xs text-text-muted">
-              ou {product.installmentMax}x de {installmentValue(product.priceTo, product.installmentMax)}
-              {product.installmentInterestFree ? ' sem juros' : ' com juros'}
-            </span>
-          )}
+          <span className="text-xs text-text-muted">
+            ou em até {maxInstallments}x de {installmentValue(product.priceTo, maxInstallments)}
+            {product.installmentInterestFree === false ? ' com juros' : ' sem juros'}
+          </span>
         </div>
 
         <div className="mt-auto flex flex-col gap-2 pt-3">

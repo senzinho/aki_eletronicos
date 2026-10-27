@@ -22,9 +22,9 @@ function formatCondition(item: WhatsAppMessageItem): string {
   if (item.installments && item.installments > 1) {
     const parcela = installmentValue(item.unitPrice, item.installments);
     const juros = item.installmentInterestFree === false ? 'com juros' : 'sem juros';
-    return `Parcelado em ${item.installments}x de ${parcela} (${juros})`;
+    return `Cartão, parcelado em ${item.installments}x de ${parcela} (${juros})`;
   }
-  return 'A combinar';
+  return 'Cartão, à vista';
 }
 
 export function buildSingleProductMessage(item: WhatsAppMessageItem): string {
