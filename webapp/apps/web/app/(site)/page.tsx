@@ -7,6 +7,7 @@ import { Card } from '../../components/ui/Card';
 import { Reveal } from '../../components/ui/Reveal';
 import { ProductCard } from '../../components/site/ProductCard';
 import { HeroWhatsAppButton } from '../../components/site/HeroWhatsAppButton';
+import { HeroVideo } from '../../components/site/HeroVideo';
 import { assetUrl } from '../../lib/asset-url';
 import { categories, products, settings, testimonials as testimonialsApi } from '../../lib/api';
 
@@ -59,22 +60,14 @@ export default async function HomePage() {
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0">
-          {heroVideo ? (
-            <video
-              className="h-full w-full object-cover opacity-40"
-              autoPlay
-              muted
-              loop
-              playsInline
-              poster={heroPoster ?? undefined}
-            >
-              <source src={heroVideo} />
-            </video>
-          ) : (
-            <div className="h-full w-full bg-gradient-to-br from-surface-1 via-bg to-surface-2 opacity-80" />
+          <div className="h-full w-full bg-gradient-to-br from-surface-1 via-bg to-surface-2 opacity-80" />
+          {heroVideo && (
+            <div className="absolute inset-0">
+              <HeroVideo src={heroVideo} poster={heroPoster ?? undefined} />
+            </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/60 to-transparent" />
-          <div className="absolute -top-24 right-[-10%] h-80 w-80 rounded-full bg-aki-green-500/10 blur-3xl animate-float" />
+          <div className="absolute -top-24 right-[-10%] h-80 w-80 rounded-full bg-aki-green-500/10 blur-3xl" />
         </div>
 
         <div className="relative mx-auto flex min-h-[520px] max-w-[1200px] flex-col justify-center gap-6 px-4 py-24 sm:px-6">

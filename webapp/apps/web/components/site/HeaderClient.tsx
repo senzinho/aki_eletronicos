@@ -67,8 +67,8 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
   return (
     <header
       className={clsx(
-        'sticky top-0 z-40 border-b transition-colors duration-300',
-        scrolled ? 'border-border bg-bg/90 backdrop-blur-md' : 'border-transparent bg-bg',
+        'sticky top-0 z-40 border-b bg-bg transition-colors duration-300',
+        scrolled ? 'border-border' : 'border-transparent',
       )}
     >
       <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-4 px-4 sm:px-6">
