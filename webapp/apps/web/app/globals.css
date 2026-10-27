@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --aki-green-500: #2fd35c;
+  --aki-green-400: #4be06a;
+  --aki-green-600: #22b24b;
+  --aki-lime-400: #a6e63c;
+
+  --bg: #000000;
+  --surface-1: #0a0f0c;
+  --surface-2: #111813;
+  --border: #1d2a21;
+
+  --text: #ffffff;
+  --text-muted: #a7b3aa;
+  --text-on-green: #04130a;
+
+  --warning: #f5b83d;
+  --danger: #ff5a5f;
+
+  --font-heading: var(--font-poppins);
+  --font-body: var(--font-inter);
+}
+
+@theme inline {
+  --color-aki-green-400: var(--aki-green-400);
+  --color-aki-green-500: var(--aki-green-500);
+  --color-aki-green-600: var(--aki-green-600);
+  --color-aki-lime-400: var(--aki-lime-400);
+
+  --color-bg: var(--bg);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-on-green: var(--text-on-green);
+
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), var(--font-body), system-ui, sans-serif;
+}
+
+.aki-glow {
+  box-shadow: 0 0 24px rgba(47, 211, 92, 0.45);
+}
+
+.aki-gradient {
+  background-image: linear-gradient(135deg, var(--aki-green-500) 0%, var(--aki-lime-400) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
