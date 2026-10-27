@@ -58,6 +58,8 @@ export interface Product {
   ordering: number;
   seoTitle: string | null;
   seoDescription: string | null;
+  createdAt: string;
+  updatedAt: string;
   brand: Brand | null;
   category: Category | null;
   images: ProductImage[];

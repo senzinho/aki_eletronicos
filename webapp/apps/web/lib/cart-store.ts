@@ -30,6 +30,7 @@ function unitPrice(item: CartItem): number {
 
 interface CartState {
   items: CartItem[];
+  isOpen: boolean;
   addItem: (item: Omit<CartItem, 'key'>) => void;
   removeItem: (key: string) => void;
   updateQuantity: (key: string, quantity: number) => void;
@@ -37,12 +38,18 @@ interface CartState {
   clear: () => void;
   totalItems: () => number;
   totalValue: () => number;
+  openCart: () => void;
+  closeCart: () => void;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      isOpen: false,
+
+      openCart: () => set({ isOpen: true }),
+      closeCart: () => set({ isOpen: false }),
 
       addItem: (item) => {
         const key = itemKey(item.productId, item.variantId);
@@ -82,6 +89,7 @@ export const useCartStore = create<CartState>()(
     {
       name: 'aki-cart',
       skipHydration: true,
+      partialize: (state) => ({ items: state.items }),
     },
   ),
 );

@@ -29,11 +29,13 @@ interface HeaderClientProps {
 export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderClientProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
   const [search, setSearch] = useState('');
   const pathname = usePathname();
   const router = useRouter();
   const totalItems = useCartStore((s) => s.totalItems());
+  const cartOpen = useCartStore((s) => s.isOpen);
+  const openCart = useCartStore((s) => s.openCart);
+  const closeCart = useCartStore((s) => s.closeCart);
 
   useEffect(() => {
     useCartStore.persist.rehydrate();
@@ -102,7 +104,7 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
         <div className="flex items-center gap-2 ml-auto md:ml-0">
           <button
             type="button"
-            onClick={() => setCartOpen(true)}
+            onClick={() => openCart()}
             aria-label={`Abrir seleção de produtos (${totalItems} ${totalItems === 1 ? 'item' : 'itens'})`}
             className="relative rounded-xl p-2.5 text-text hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aki-green-400"
           >
@@ -178,7 +180,7 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
         </nav>
       )}
 
-      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} whatsappNumber={whatsappNumber} />
+      <CartDrawer open={cartOpen} onClose={closeCart} whatsappNumber={whatsappNumber} />
     </header>
   );
 }

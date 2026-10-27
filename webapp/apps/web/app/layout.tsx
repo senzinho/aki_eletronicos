@@ -17,12 +17,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3002"),
   title: {
     default: "Aki Eletrônicos",
     template: "%s | Aki Eletrônicos",
   },
   description:
     "Especializada em celulares: venda de smartphones Apple, Xiaomi, Samsung, acessórios e assistência técnica especializada em Colombo/PR.",
+  icons: {
+    icon: "/images/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
