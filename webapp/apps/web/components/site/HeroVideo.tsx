@@ -55,15 +55,15 @@ export function HeroVideo({ src, poster }: HeroVideoProps) {
   if (!shouldLoad) {
     return poster ? (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={poster} alt="" className="h-full w-full object-cover opacity-40" />
+      <img src={poster} alt="" className="h-full w-full object-cover opacity-90" />
     ) : null;
   }
 
   return (
     <video
       ref={videoRef}
-      className="h-full w-full object-cover opacity-40 transition-opacity duration-700"
-      style={{ opacity: ready ? 0.4 : 0 }}
+      className="h-full w-full object-cover transition-opacity duration-700"
+      style={{ opacity: ready ? 0.9 : 0 }}
       autoPlay
       muted
       loop

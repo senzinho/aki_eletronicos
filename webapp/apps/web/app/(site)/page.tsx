@@ -60,17 +60,18 @@ export default async function HomePage() {
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0">
-          <div className="h-full w-full bg-gradient-to-br from-surface-1 via-bg to-surface-2 opacity-80" />
+          <div className="h-full w-full bg-gradient-to-br from-surface-1 via-bg to-surface-2" />
           {heroVideo && (
             <div className="absolute inset-0">
               <HeroVideo src={heroVideo} poster={heroPoster ?? undefined} />
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/60 to-transparent" />
-          <div className="absolute -top-24 right-[-10%] h-80 w-80 rounded-full bg-aki-green-500/10 blur-3xl" />
+          {/* Darken only behind the text column so the video stays bright on the rest of the frame */}
+          <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/50 to-transparent lg:to-bg/5" />
+          <div className="absolute inset-0 bg-gradient-to-t from-bg/80 via-transparent to-transparent" />
         </div>
 
-        <div className="relative mx-auto flex min-h-[520px] max-w-[1200px] flex-col justify-center gap-6 px-4 py-24 sm:px-6">
+        <div className="relative mx-auto flex min-h-[600px] sm:min-h-[680px] lg:min-h-[760px] max-w-[1200px] flex-col justify-center gap-6 px-4 py-24 sm:px-6">
           <h1 className="animate-item-in max-w-xl font-heading text-4xl font-bold leading-[1.05] tracking-tight text-text sm:text-5xl">
             Seu próximo dispositivo está aqui.
           </h1>
