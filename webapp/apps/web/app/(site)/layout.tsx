@@ -7,6 +7,10 @@ import { CustomBodyScripts, GtmNoscript, ThirdPartyScripts } from '../../compone
 import { settings } from '../../lib/api';
 import { assetUrl } from '../../lib/asset-url';
 
+// Settings/products come from the admin-managed API, so pages here should
+// always reflect live data (and this avoids needing a reachable API at build time).
+export const dynamic = 'force-dynamic';
+
 export default async function SiteLayout({ children }: { children: ReactNode }) {
   const s = await settings.get();
   const base = s.app_url || 'http://localhost:3002';

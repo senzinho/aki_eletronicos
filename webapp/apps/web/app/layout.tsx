@@ -36,7 +36,8 @@ const DEFAULT_DESCRIPTION =
   "Especializada em celulares: venda de smartphones Apple, Xiaomi, Samsung, acessórios e assistência técnica especializada em Colombo/PR.";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const s = await settings.get();
+  // Falls back to defaults if the API isn't reachable yet (e.g. during a Docker build).
+  const s = await settings.get().catch(() => ({}) as Record<string, string>);
   const ogImage = assetUrl(s.og_image || null);
 
   return {
