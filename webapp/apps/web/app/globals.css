@@ -18,8 +18,35 @@
   --warning: #f5b83d;
   --danger: #ff5a5f;
 
+  --bg-gradient: radial-gradient(circle at 18% -8%, rgba(47, 211, 92, 0.16), transparent 50%),
+    radial-gradient(circle at 100% 0%, rgba(166, 230, 60, 0.1), transparent 45%),
+    linear-gradient(180deg, #000000 0%, #060a07 45%, #0a0f0c 100%);
+
   --font-heading: var(--font-poppins);
   --font-body: var(--font-inter);
+
+  /* dark surfaces swallow the logo's black half, so it sits on a light chip */
+  --brand-chip-bg: #ffffff;
+  --brand-chip-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+:root[data-theme='light'] {
+  --bg: #f6faf7;
+  --surface-1: #ffffff;
+  --surface-2: #eef4f0;
+  --border: #dbe7de;
+
+  --text: #0b1511;
+  --text-muted: #5a6b61;
+  --text-on-green: #04130a;
+
+  --bg-gradient: radial-gradient(circle at 18% -8%, rgba(47, 211, 92, 0.12), transparent 50%),
+    radial-gradient(circle at 100% 0%, rgba(166, 230, 60, 0.14), transparent 45%),
+    linear-gradient(180deg, #ffffff 0%, #f6faf7 45%, #eef4f0 100%);
+
+  /* logo is fully legible on light surfaces, so let it sit flush with the background */
+  --brand-chip-bg: transparent;
+  --brand-chip-shadow: none;
 }
 
 @theme inline {
@@ -45,9 +72,13 @@
 }
 
 body {
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  background-size: cover;
   color: var(--text);
   font-family: var(--font-body), system-ui, sans-serif;
+  transition: background-color 400ms ease, color 400ms ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -108,6 +139,30 @@ dialog::backdrop {
   transform: translateY(0);
 }
 
+.reveal-left {
+  transform: translateX(-36px);
+}
+
+.reveal-left.is-visible {
+  transform: translateX(0);
+}
+
+.reveal-right {
+  transform: translateX(36px);
+}
+
+.reveal-right.is-visible {
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  transform: scale(0.92);
+}
+
+.reveal-scale.is-visible {
+  transform: scale(1);
+}
+
 /* Subtle float used for empty-states and hero accents */
 @keyframes float-soft {
   0%, 100% {
@@ -120,6 +175,71 @@ dialog::backdrop {
 
 .animate-float {
   animation: float-soft 4s ease-in-out infinite;
+}
+
+/* Slow ambient drift used behind hero/CTA sections */
+@keyframes aurora-drift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(2%, -3%) scale(1.06);
+  }
+}
+
+.animate-aurora {
+  animation: aurora-drift 14s ease-in-out infinite;
+}
+
+/* Icon nudge on card/group hover */
+@keyframes icon-pop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.15) rotate(-6deg);
+  }
+  100% {
+    transform: scale(1.08) rotate(0deg);
+  }
+}
+
+.group:hover .group-hover\:animate-icon-pop {
+  animation: icon-pop 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Hero entrance — cinematic blur-fade for text (first thing visitors see) */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.animate-hero-in {
+  animation: hero-in 950ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Hero CTA entrance — springier "pop" so the buttons feel distinct from the text */
+@keyframes hero-cta-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-hero-cta {
+  animation: hero-cta-in 650ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 /* Cart line-item enter transition */

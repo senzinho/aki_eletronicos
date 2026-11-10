@@ -5,20 +5,26 @@ import { useEffect, useRef, useState } from 'react';
 interface HeroVideoProps {
   src: string;
   poster?: string;
+  /** Don't load or play until the user scrolls this into view (for below-the-fold videos). */
+  lazy?: boolean;
 }
 
 /**
- * Background hero video, loaded after the page is interactive (not competing
- * with critical JS/CSS/fonts for bandwidth) and paused automatically when
- * scrolled out of view to avoid burning CPU/battery on a loop no one sees.
+ * Background video, paused automatically when scrolled out of view to avoid
+ * burning CPU/battery on a loop no one sees. By default it loads right after
+ * the page is interactive (not competing with critical JS/CSS/fonts for
+ * bandwidth) — pass `lazy` for a below-the-fold video that should only start
+ * loading/playing once the viewer actually scrolls to it.
  */
-export function HeroVideo({ src, poster }: HeroVideoProps) {
+export function HeroVideo({ src, poster, lazy = false }: HeroVideoProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (lazy) return;
 
     const win = window as Window & { requestIdleCallback?: (cb: () => void) => number };
     const start = () => setShouldLoad(true);
@@ -32,7 +38,26 @@ export function HeroVideo({ src, poster }: HeroVideoProps) {
 
     window.addEventListener('load', start, { once: true });
     return () => window.removeEventListener('load', start);
-  }, []);
+  }, [lazy]);
+
+  useEffect(() => {
+    if (!lazy || shouldLoad) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [lazy, shouldLoad]);
 
   useEffect(() => {
     const el = videoRef.current;
@@ -53,26 +78,32 @@ export function HeroVideo({ src, poster }: HeroVideoProps) {
   }, [shouldLoad]);
 
   if (!shouldLoad) {
-    return poster ? (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src={poster} alt="" className="h-full w-full object-cover opacity-90" />
-    ) : null;
+    return (
+      <div ref={containerRef} className="h-full w-full">
+        {poster ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={poster} alt="" className="h-full w-full object-cover opacity-90" />
+        ) : null}
+      </div>
+    );
   }
 
   return (
-    <video
-      ref={videoRef}
-      className="h-full w-full object-cover transition-opacity duration-700"
-      style={{ opacity: ready ? 0.9 : 0 }}
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="auto"
-      poster={poster}
-      onCanPlay={() => setReady(true)}
-    >
-      <source src={src} type="video/mp4" />
-    </video>
+    <div ref={containerRef} className="h-full w-full">
+      <video
+        ref={videoRef}
+        className="h-full w-full object-cover transition-opacity duration-700"
+        style={{ opacity: ready ? 0.9 : 0 }}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster={poster}
+        onCanPlay={() => setReady(true)}
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+    </div>
   );
 }

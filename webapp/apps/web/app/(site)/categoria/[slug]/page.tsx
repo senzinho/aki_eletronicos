@@ -15,9 +15,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const categoryList = await categories.list();
   const category = categoryList.find((c) => c.slug === slug);
   if (!category) return {};
+  const description = `Confira os produtos da categoria ${category.name} na Aki Eletrônicos.`;
   return {
     title: category.name,
-    description: `Confira os produtos da categoria ${category.name} na Aki Eletrônicos.`,
+    description,
+    alternates: { canonical: `/categoria/${category.slug}` },
+    openGraph: { title: category.name, description },
   };
 }
 

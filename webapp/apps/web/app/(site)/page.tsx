@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Star } from 'lucide-react';
+import { MessageCircle, ShieldCheck, Smartphone, Star } from 'lucide-react';
 import { buttonStyles } from '../../components/ui/button-styles';
 import { Card } from '../../components/ui/Card';
 import { Reveal } from '../../components/ui/Reveal';
@@ -16,7 +16,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: s.seo_title || 'Aki Eletrônicos',
     description: s.seo_description,
+    alternates: { canonical: '/' },
     openGraph: {
+      type: 'website',
       title: s.seo_title,
       description: s.seo_description,
       images: s.og_image ? [assetUrl(s.og_image)!] : undefined,
@@ -26,14 +28,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const DIFERENCIAIS = [
   {
+    icon: MessageCircle,
     title: 'Atendimento direto',
     description: 'Converse com a equipe pelo WhatsApp para esclarecer dúvidas e consultar as condições da compra.',
   },
   {
+    icon: ShieldCheck,
     title: 'Informações transparentes',
     description: 'Consulte especificações, preços e condições disponíveis antes de entrar em contato.',
   },
   {
+    icon: Smartphone,
     title: 'Compra assistida',
     description: 'Escolha seu produto no site e envie os detalhes do pedido diretamente para a loja.',
   },
@@ -52,6 +57,8 @@ export default async function HomePage() {
   const whatsappNumber = s.whatsapp || '5541998132536';
   const heroVideo = assetUrl(s.hero_video || null);
   const heroPoster = assetUrl(s.hero_video_poster || null);
+  const aboutVideo = assetUrl(s.about_video || null);
+  const aboutPoster = assetUrl(s.about_video_poster || null);
   // Placeholder provisório (mesmo usado no site PHP) — substituir por foto real da loja.
   const lojaPhoto = '/images/loja.jpg';
 
@@ -61,6 +68,7 @@ export default async function HomePage() {
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0">
           <div className="h-full w-full bg-gradient-to-br from-surface-1 via-bg to-surface-2" />
+          <div className="animate-aurora pointer-events-none absolute -top-1/3 left-1/4 h-[60%] w-[60%] rounded-full bg-aki-green-500/20 blur-[90px]" />
           {heroVideo && (
             <div className="absolute inset-0">
               <HeroVideo src={heroVideo} poster={heroPoster ?? undefined} />
@@ -72,14 +80,17 @@ export default async function HomePage() {
         </div>
 
         <div className="relative mx-auto flex min-h-[600px] sm:min-h-[680px] lg:min-h-[760px] max-w-[1200px] flex-col justify-center gap-6 px-4 py-24 sm:px-6">
-          <h1 className="animate-item-in max-w-xl font-heading text-4xl font-bold leading-[1.05] tracking-tight text-text sm:text-5xl">
+          <h1 className="animate-hero-in max-w-xl font-heading text-4xl font-bold leading-[1.05] tracking-tight text-text sm:text-5xl">
             Seu próximo dispositivo está aqui.
           </h1>
-          <p className="animate-item-in max-w-md text-base text-text-muted sm:text-lg" style={{ animationDelay: '90ms' }}>
+          <p className="animate-hero-in max-w-md text-base text-text-muted sm:text-lg" style={{ animationDelay: '180ms' }}>
             Explore celulares, acessórios e tecnologia em um só lugar.
           </p>
-          <div className="animate-item-in flex flex-wrap gap-3 mt-2" style={{ animationDelay: '170ms' }}>
-            <Link href="/produtos" className={buttonStyles('primary', 'lg')}>
+          <div className="animate-hero-cta flex flex-wrap gap-3 mt-2" style={{ animationDelay: '480ms' }}>
+            <Link
+              href="/produtos"
+              className={buttonStyles('primary', 'lg', 'transition-transform duration-200 hover:scale-[1.04] active:scale-[0.97]')}
+            >
               Explorar produtos
             </Link>
             <HeroWhatsAppButton whatsappNumber={whatsappNumber} />
@@ -90,10 +101,14 @@ export default async function HomePage() {
       {/* APRESENTAÇÃO DA LOJA */}
       <section className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
         <div className="grid items-center gap-10 md:grid-cols-2">
-          <Reveal className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border">
-            <Image src={lojaPhoto} alt="Loja Aki Eletrônicos" fill className="object-cover" sizes="(min-width: 768px) 560px, 100vw" />
+          <Reveal className="reveal-left relative aspect-[4/3] overflow-hidden rounded-2xl border border-border">
+            {aboutVideo ? (
+              <HeroVideo src={aboutVideo} poster={aboutPoster ?? undefined} lazy />
+            ) : (
+              <Image src={lojaPhoto} alt="Loja Aki Eletrônicos" fill className="object-cover" sizes="(min-width: 768px) 560px, 100vw" />
+            )}
           </Reveal>
-          <Reveal delay={100} className="flex flex-col gap-4">
+          <Reveal delay={100} className="reveal-right flex flex-col gap-4">
             <h2 className="font-heading text-2xl font-bold sm:text-3xl">Conheça a Aki Eletrônicos</h2>
             <p className="text-text-muted leading-relaxed">
               Somos especialistas em assistência técnica de celulares e informática, oferecendo serviços ágeis,
@@ -120,9 +135,9 @@ export default async function HomePage() {
             </Reveal>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
               {categoryList.map((c, i) => (
-                <Reveal key={c.id} delay={i * 60}>
+                <Reveal key={c.id} delay={i * 60} className="reveal-scale">
                   <Link href={`/categoria/${c.slug}`}>
-                    <Card className="flex flex-col items-center gap-3 p-6 text-center transition-all duration-300 hover:border-aki-green-500/60 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(47,211,92,0.1)]">
+                    <Card className="flex flex-col items-center gap-3 p-6 text-center transition-all duration-300 hover:border-aki-green-500/60 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_12px_30px_rgba(47,211,92,0.1)]">
                       <span className="font-heading text-sm font-semibold text-text">{c.name}</span>
                     </Card>
                   </Link>
@@ -179,8 +194,11 @@ export default async function HomePage() {
         </Reveal>
         <div className="grid gap-5 sm:grid-cols-3">
           {DIFERENCIAIS.map((d, i) => (
-            <Reveal key={d.title} delay={i * 80}>
-              <Card className="p-6 transition-all duration-300 hover:border-aki-green-500/40 hover:-translate-y-0.5">
+            <Reveal key={d.title} delay={i * 80} className="reveal-scale h-full">
+              <Card className="group flex h-full flex-col p-6 transition-all duration-300 hover:border-aki-green-500/40 hover:-translate-y-1">
+                <span className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-aki-green-500/10 text-aki-green-400 group-hover:animate-icon-pop">
+                  <d.icon size={20} strokeWidth={1.8} />
+                </span>
                 <h3 className="font-heading text-base font-semibold mb-2">{d.title}</h3>
                 <p className="text-sm text-text-muted leading-relaxed">{d.description}</p>
               </Card>
@@ -219,7 +237,7 @@ export default async function HomePage() {
       )}
 
       {/* CTA FINAL */}
-      <Reveal className="mx-auto max-w-[1200px] px-4 py-20 text-center sm:px-6">
+      <Reveal className="reveal-scale mx-auto max-w-[1200px] px-4 py-20 text-center sm:px-6">
         <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-3">Encontrou o que procurava?</h2>
         <p className="text-text-muted mb-8 max-w-md mx-auto">
           Escolha seu produto e converse com a Aki Eletrônicos para finalizar sua compra.

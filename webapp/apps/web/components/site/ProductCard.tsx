@@ -43,15 +43,15 @@ export function ProductCard({ product, whatsappNumber, siteUrl }: ProductCardPro
   );
 
   return (
-    <Card className="group flex flex-col overflow-hidden hover:-translate-y-1 hover:border-aki-green-500/60 hover:shadow-[0_8px_30px_rgba(47,211,92,0.12)]">
-      <Link href={`/produto/${product.slug}`} className="relative block aspect-square bg-surface-1">
+    <Card className="group flex min-w-0 flex-col overflow-hidden hover:-translate-y-1 hover:border-aki-green-500/60 hover:shadow-[0_8px_30px_rgba(47,211,92,0.12)]">
+      <Link href={`/produto/${product.slug}`} className="relative block aspect-square w-full bg-surface-1">
         {img ? (
           <Image
             src={img}
             alt={product.name}
             fill
             sizes="(min-width: 1024px) 280px, 45vw"
-            className="object-contain p-6 transition-transform duration-250 group-hover:scale-[1.03]"
+            className="object-cover transition-transform duration-250 group-hover:scale-[1.03]"
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-1.5 text-text-muted">

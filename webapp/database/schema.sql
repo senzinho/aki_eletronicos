@@ -210,6 +210,8 @@ INSERT INTO site_settings (setting_key, setting_value) VALUES
 ('tiktok', ''),
 ('hero_video', ''),
 ('hero_video_poster', ''),
+('about_video', ''),
+('about_video_poster', ''),
 ('horario_atendimento', 'Segunda a Sábado — consulte horários pelo WhatsApp'),
 ('seo_title', 'Aki Eletrônicos — Smartphones, Acessórios e Assistência Técnica em Colombo/PR'),
 ('seo_description', 'Especializada em celulares: venda de smartphones Apple, Xiaomi, Samsung, acessórios e assistência técnica especializada em Colombo/PR.'),

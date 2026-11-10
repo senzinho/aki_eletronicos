@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ProductDetailClient } from '../../../../components/site/ProductDetailClient';
 import { ProductCard } from '../../../../components/site/ProductCard';
+import { Reveal } from '../../../../components/ui/Reveal';
 import { ApiError, products, settings } from '../../../../lib/api';
 import { assetUrl } from '../../../../lib/asset-url';
 
@@ -30,7 +31,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    openGraph: { title, description, images: image ? [image] : undefined },
+    alternates: { canonical: `/produto/${product.slug}` },
+    openGraph: { type: 'website', title, description, images: image ? [image] : undefined },
   };
 }
 
@@ -96,10 +98,14 @@ export default async function ProdutoPage({ params }: PageProps) {
 
       {related.length > 0 && (
         <section className="mt-20 border-t border-border pt-12">
-          <h2 className="font-heading text-2xl font-bold mb-6">Você também pode gostar</h2>
+          <Reveal>
+            <h2 className="font-heading text-2xl font-bold mb-6">Você também pode gostar</h2>
+          </Reveal>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {related.map((p) => (
-              <ProductCard key={p.id} product={p} whatsappNumber={whatsappNumber} siteUrl={siteUrl} />
+            {related.map((p, i) => (
+              <Reveal key={p.id} delay={Math.min(i, 7) * 60}>
+                <ProductCard product={p} whatsappNumber={whatsappNumber} siteUrl={siteUrl} />
+              </Reveal>
             ))}
           </div>
         </section>

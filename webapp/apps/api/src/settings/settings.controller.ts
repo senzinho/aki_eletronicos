@@ -17,8 +17,16 @@ import { imageUploadOptions, publicUploadPath, videoUploadOptions } from '../com
 import { SettingsService } from './settings.service.js';
 import { UpdateSettingsDto } from './dto/update-settings.dto.js';
 
-const IMAGE_KEYS = ['logo', 'favicon', 'og_image', 'hero_video_poster'];
-const VIDEO_KEYS = ['hero_video'];
+const IMAGE_KEYS = [
+  'logo',
+  'favicon',
+  'og_image',
+  'hero_video_poster',
+  'about_video_poster',
+  'ofertas_banner_topo',
+  'ofertas_banner_produtos',
+];
+const VIDEO_KEYS = ['hero_video', 'about_video'];
 
 @Controller('settings')
 export class SettingsController {

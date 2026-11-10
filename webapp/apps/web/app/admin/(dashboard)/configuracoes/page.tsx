@@ -119,6 +119,30 @@ export default function ConfiguracoesPage() {
           </label>
           {values.hero_video && <span className="text-xs text-text-muted">Vídeo atual: {values.hero_video}</span>}
         </div>
+
+        <ImageUploadField
+          label="Imagem de capa do vídeo (seção Conheça a loja)"
+          currentUrl={values.about_video_poster || null}
+          onUpload={async (file) => setValues(await settingsApi.uploadImage('about_video_poster', file))}
+        />
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-text">Vídeo da seção &quot;Conheça a loja&quot; (MP4/WebM, até 60MB)</span>
+          <label className="cursor-pointer self-start rounded-xl border border-border px-3.5 py-2 text-sm text-text-muted hover:text-text hover:border-aki-green-500">
+            {values.about_video ? 'Trocar vídeo' : 'Enviar vídeo'}
+            <input
+              type="file"
+              accept="video/mp4,video/webm"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                setValues(await settingsApi.uploadVideo('about_video', file));
+                e.target.value = '';
+              }}
+            />
+          </label>
+          {values.about_video && <span className="text-xs text-text-muted">Vídeo atual: {values.about_video}</span>}
+        </div>
       </Card>
     </div>
   );

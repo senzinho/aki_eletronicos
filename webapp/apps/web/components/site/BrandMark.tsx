@@ -9,9 +9,10 @@ interface BrandMarkProps {
 
 /**
  * The Aki Eletrônicos ring mark is a light-background logo (green + black
- * two-tone). On the site's dark surfaces the black half disappears, so the
- * mark sits on a small rounded light chip to stay fully legible without
- * altering the logo's own colors.
+ * two-tone). On dark surfaces the black half disappears, so the mark sits on
+ * a small rounded chip tinted via --brand-chip-bg, which is only opaque in
+ * the dark theme — in light mode it's transparent and the logo sits flush
+ * with the page background.
  */
 export function BrandMark({ logoPath, companyName, size = 36 }: BrandMarkProps) {
   const src = assetUrl(logoPath);
@@ -19,8 +20,13 @@ export function BrandMark({ logoPath, companyName, size = 36 }: BrandMarkProps) 
 
   return (
     <span
-      className="flex shrink-0 items-center justify-center rounded-xl bg-white shadow-sm"
-      style={{ width: size, height: size }}
+      className="flex shrink-0 items-center justify-center rounded-xl"
+      style={{
+        width: size,
+        height: size,
+        background: 'var(--brand-chip-bg)',
+        boxShadow: 'var(--brand-chip-shadow)',
+      }}
     >
       <Image
         src={src}

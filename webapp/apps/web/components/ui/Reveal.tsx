@@ -45,7 +45,7 @@ export function Reveal({ children, className, delay = 0, once = true }: RevealPr
   return (
     <div
       ref={ref}
-      className={clsx('reveal', visible && 'is-visible', className)}
+      className={clsx('reveal min-w-0', visible && 'is-visible', className)}
       style={{ transitionDelay: visible ? `${delay}ms` : '0ms' }}
     >
       {children}

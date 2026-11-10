@@ -7,6 +7,11 @@ import { parseProductQuery, type SearchParams } from '../../../lib/parse-product
 export const metadata: Metadata = {
   title: 'Produtos',
   description: 'Explore o catálogo completo de smartphones e acessórios da Aki Eletrônicos.',
+  alternates: { canonical: '/produtos' },
+  openGraph: {
+    title: 'Produtos',
+    description: 'Explore o catálogo completo de smartphones e acessórios da Aki Eletrônicos.',
+  },
 };
 
 export default async function ProdutosPage({ searchParams }: { searchParams: Promise<SearchParams> }) {

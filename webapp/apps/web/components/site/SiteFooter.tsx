@@ -81,6 +81,9 @@ export async function SiteFooter() {
           <Link href="/reparos" className="w-fit text-sm text-text-muted transition-colors hover:text-aki-green-400">
             Assistência técnica
           </Link>
+          <Link href="/montagem-de-pc" className="w-fit text-sm text-text-muted transition-colors hover:text-aki-green-400">
+            Montagem de PC
+          </Link>
           <Link href="/contato" className="w-fit text-sm text-text-muted transition-colors hover:text-aki-green-400">
             Contato
           </Link>

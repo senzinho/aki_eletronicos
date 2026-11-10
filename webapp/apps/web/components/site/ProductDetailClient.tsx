@@ -69,6 +69,8 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
     ? Number(matchedVariant.priceOverride)
     : Number(product.pricePix ?? product.priceTo);
   const unitPrice = condition === 'pix' ? basePricePix : basePriceFull;
+  const totalPrice = unitPrice * quantity;
+  const totalPriceFull = basePriceFull * quantity;
 
   const variantLabel = [selectedColor, selectedStorage].filter(Boolean).join(' · ') || null;
   const productUrl = `${siteUrl}/produto/${product.slug}`;
@@ -132,7 +134,7 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
               alt={product.name}
               fill
               sizes="(min-width: 1024px) 560px, 100vw"
-              className="animate-item-in object-contain p-8 transition-transform duration-500 ease-out group-hover:scale-105"
+              className="animate-item-in object-contain transition-transform duration-500 ease-out group-hover:scale-105"
               priority
             />
           ) : (
@@ -187,13 +189,20 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
         </div>
 
         <div className="flex flex-col gap-1 rounded-2xl border border-border bg-surface-2 p-4">
-          {product.priceFrom && <span className="text-sm text-text-muted line-through">{formatPrice(product.priceFrom)}</span>}
-          <span className="font-heading text-3xl font-bold text-aki-green-400">{formatPrice(unitPrice)}</span>
+          {product.priceFrom && (
+            <span className="text-sm text-text-muted line-through">
+              {formatPrice(quantity > 1 ? Number(product.priceFrom) * quantity : product.priceFrom)}
+            </span>
+          )}
+          <span className="font-heading text-3xl font-bold text-aki-green-400">{formatPrice(totalPrice)}</span>
+          {quantity > 1 && (
+            <span className="text-xs text-text-muted">{formatPrice(unitPrice)} cada × {quantity} unidades</span>
+          )}
           <span className="text-xs text-text-muted">
             {condition === 'pix'
               ? 'à vista no Pix'
               : installments > 1
-                ? `no cartão, em ${installments}x de ${installmentValue(basePriceFull, installments)}`
+                ? `no cartão, em ${installments}x de ${installmentValue(totalPriceFull, installments)}`
                 : 'no cartão, à vista'}
           </span>
           {condition !== 'parcelado' && (
@@ -302,7 +311,7 @@ export function ProductDetailClient({ product, whatsappNumber, siteUrl }: Produc
               >
                 {Array.from({ length: maxInstallments }, (_, i) => i + 1).map((n) => (
                   <option key={n} value={n}>
-                    {n === 1 ? 'À vista no cartão' : `${n}x de ${installmentValue(basePriceFull, n)}`}
+                    {n === 1 ? 'À vista no cartão' : `${n}x de ${installmentValue(totalPriceFull, n)}`}
                     {n > 1 && (product.installmentInterestFree === false ? ' (com juros)' : ' (sem juros)')}
                   </option>
                 ))}

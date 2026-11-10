@@ -2,12 +2,20 @@ import type { Metadata } from 'next';
 import { HeroWhatsAppButton } from '../../../components/site/HeroWhatsAppButton';
 import { ContactForm } from '../../../components/site/ContactForm';
 import { Card } from '../../../components/ui/Card';
+import { Reveal } from '../../../components/ui/Reveal';
 import { settings } from '../../../lib/api';
+
+const REPAROS_DESCRIPTION =
+  'Assistência técnica especializada: troca de tela, bateria, conector de carga, câmera, diagnóstico e reparos de smartphones em Colombo/PR.';
 
 export const metadata: Metadata = {
   title: 'Assistência Técnica',
-  description:
-    'Assistência técnica especializada: troca de tela, bateria, conector de carga, câmera, diagnóstico e reparos de smartphones em Colombo/PR.',
+  description: REPAROS_DESCRIPTION,
+  alternates: { canonical: '/reparos' },
+  openGraph: {
+    title: 'Assistência Técnica',
+    description: REPAROS_DESCRIPTION,
+  },
 };
 
 const SERVICES = [
@@ -45,7 +53,7 @@ export default async function ReparosPage() {
   return (
     <div>
       <section className="border-b border-border bg-surface-1/60">
-        <div className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
+        <Reveal className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
           <span className="text-sm font-semibold uppercase tracking-wide text-aki-green-400">Assistência técnica</span>
           <h1 className="mt-3 max-w-xl font-heading text-3xl font-bold leading-tight sm:text-4xl">
             Seu celular parou. A gente resolve.
@@ -53,65 +61,77 @@ export default async function ReparosPage() {
           <p className="mt-3 max-w-md text-text-muted">
             Diagnóstico preciso, reparos especializados e cuidado em cada detalhe.
           </p>
-          <a href="#orcamento" className="mt-6 inline-flex">
+          <div className="mt-6 inline-flex">
             <HeroWhatsAppButton whatsappNumber={s.whatsapp || '5541998132536'} label="Solicitar orçamento" variant="primary" />
-          </a>
-        </div>
+          </div>
+        </Reveal>
       </section>
 
       <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
-        <h2 className="font-heading text-2xl font-bold mb-8">Serviços</h2>
+        <Reveal>
+          <h2 className="font-heading text-2xl font-bold mb-8">Serviços</h2>
+        </Reveal>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {SERVICES.map(([name, desc]) => (
-            <Card key={name} className="flex flex-col gap-2 p-5">
-              <h3 className="font-heading text-sm font-semibold">{name}</h3>
-              <p className="text-xs text-text-muted leading-relaxed">{desc}</p>
-            </Card>
+          {SERVICES.map(([name, desc], i) => (
+            <Reveal key={name} delay={Math.min(i, 7) * 50} className="reveal-scale">
+              <Card className="flex flex-col gap-2 p-5 transition-all duration-300 hover:border-aki-green-500/40 hover:-translate-y-0.5">
+                <h3 className="font-heading text-sm font-semibold">{name}</h3>
+                <p className="text-xs text-text-muted leading-relaxed">{desc}</p>
+              </Card>
+            </Reveal>
           ))}
         </div>
       </section>
 
       <section className="border-y border-border bg-surface-1/40">
         <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
-          <h2 className="font-heading text-2xl font-bold mb-8">Como funciona?</h2>
+          <Reveal>
+            <h2 className="font-heading text-2xl font-bold mb-8">Como funciona?</h2>
+          </Reveal>
           <div className="grid gap-6 sm:grid-cols-4">
-            {PROCESS_STEPS.map(([num, title, desc]) => (
-              <div key={num} className="flex flex-col gap-2">
+            {PROCESS_STEPS.map(([num, title, desc], i) => (
+              <Reveal key={num} delay={i * 100} className="reveal-left flex flex-col gap-2">
                 <span className="font-heading text-2xl font-bold text-aki-green-400">{num}</span>
                 <h3 className="font-heading text-sm font-semibold">{title}</h3>
                 <p className="text-xs text-text-muted leading-relaxed">{desc}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
-        <h2 className="font-heading text-2xl font-bold mb-8">Por que confiar seu celular à nossa assistência?</h2>
+        <Reveal>
+          <h2 className="font-heading text-2xl font-bold mb-8">Por que confiar seu celular à nossa assistência?</h2>
+        </Reveal>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {DIFFERENTIALS.map(([title, desc]) => (
-            <Card key={title} className="p-5">
-              <h3 className="font-heading text-sm font-semibold mb-1.5">{title}</h3>
-              <p className="text-xs text-text-muted leading-relaxed">{desc}</p>
-            </Card>
+          {DIFFERENTIALS.map(([title, desc], i) => (
+            <Reveal key={title} delay={i * 70} className="reveal-scale">
+              <Card className="p-5 transition-all duration-300 hover:border-aki-green-500/40 hover:-translate-y-0.5">
+                <h3 className="font-heading text-sm font-semibold mb-1.5">{title}</h3>
+                <p className="text-xs text-text-muted leading-relaxed">{desc}</p>
+              </Card>
+            </Reveal>
           ))}
         </div>
       </section>
 
       <section id="orcamento" className="border-t border-border bg-surface-1/40">
         <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2">
-          <div className="flex flex-col justify-center gap-4">
+          <Reveal className="reveal-left flex flex-col justify-center gap-4">
             <h2 className="font-heading text-2xl font-bold">Prefere falar direto?</h2>
             <p className="text-text-muted">Descreva o problema pelo WhatsApp e receba um retorno rápido da nossa equipe.</p>
             <HeroWhatsAppButton
               whatsappNumber={s.whatsapp || '5541998132536'}
               label="Falar direto no WhatsApp"
             />
-          </div>
-          <Card className="p-6 sm:p-8">
-            <h2 className="font-heading text-lg font-semibold mb-5">Solicitar orçamento</h2>
-            <ContactForm type="reparo" extraFields="reparo" />
-          </Card>
+          </Reveal>
+          <Reveal delay={100} className="reveal-right">
+            <Card className="p-6 sm:p-8">
+              <h2 className="font-heading text-lg font-semibold mb-5">Solicitar orçamento</h2>
+              <ContactForm type="reparo" extraFields="reparo" />
+            </Card>
+          </Reveal>
         </div>
       </section>
     </div>

@@ -9,7 +9,7 @@ import type { ServiceRequestType } from '../../lib/types';
 
 interface ContactFormProps {
   type: ServiceRequestType;
-  extraFields?: 'reparo';
+  extraFields?: 'reparo' | 'montagem';
 }
 
 export function ContactForm({ type, extraFields }: ContactFormProps) {
@@ -69,6 +69,12 @@ export function ContactForm({ type, extraFields }: ContactFormProps) {
           <Input id="problemType" name="problemType" label="Problema" required placeholder="Ex: Tela quebrada, bateria viciada..." />
         </>
       )}
+      {extraFields === 'montagem' && (
+        <>
+          <Input id="deviceModel" name="deviceModel" label="Finalidade do PC" required placeholder="Ex: Jogos, trabalho, edição de vídeo..." />
+          <Input id="problemType" name="problemType" label="Orçamento aproximado" required placeholder="Ex: R$ 3.000 a R$ 4.000" />
+        </>
+      )}
       <Textarea id="message" name="message" label="Mensagem" rows={4} />
 
       {status === 'error' && (
@@ -80,7 +86,7 @@ export function ContactForm({ type, extraFields }: ContactFormProps) {
 
       <button type="submit" disabled={status === 'loading'} className={buttonStyles('primary', 'lg', 'gap-2')}>
         {status === 'loading' && <Loader2 size={17} strokeWidth={2.5} className="animate-spin" />}
-        {status === 'loading' ? 'Enviando...' : extraFields === 'reparo' ? 'Solicitar orçamento' : 'Enviar mensagem'}
+        {status === 'loading' ? 'Enviando...' : extraFields ? 'Solicitar orçamento' : 'Enviar mensagem'}
       </button>
     </form>
   );

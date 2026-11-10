@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
-import { Menu, Search, ShoppingBag, X } from 'lucide-react';
+import { Menu, ShoppingBag, X } from 'lucide-react';
 import { Logo } from './Logo';
+import { ThemeToggle } from './ThemeToggle';
 import { buttonStyles } from '../ui/button-styles';
 import { useCartStore } from '../../lib/cart-store';
 import { buildWhatsAppLink } from '../../lib/whatsapp';
@@ -18,6 +19,7 @@ const NAV_LINKS = [
   { href: '/produtos', label: 'Produtos' },
   { href: '/ofertas', label: 'Ofertas' },
   { href: '/reparos', label: 'Assistência técnica' },
+  { href: '/montagem-de-pc', label: 'Montagem de PC' },
   { href: '/sobre', label: 'Sobre' },
   { href: '/contato', label: 'Contato' },
 ];
@@ -31,9 +33,7 @@ interface HeaderClientProps {
 export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderClientProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [search, setSearch] = useState('');
   const pathname = usePathname();
-  const router = useRouter();
   const totalItems = useCartStore((s) => s.totalItems());
   const cartOpen = useCartStore((s) => s.isOpen);
   const openCart = useCartStore((s) => s.openCart);
@@ -58,11 +58,6 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
     whatsappNumber,
     'Olá! Vim pelo site e gostaria de saber mais informações.',
   );
-
-  function submitSearch(e: React.FormEvent) {
-    e.preventDefault();
-    router.push(search.trim() ? `/produtos?search=${encodeURIComponent(search.trim())}` : '/produtos');
-  }
 
   return (
     <header
@@ -90,22 +85,8 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
           ))}
         </nav>
 
-        <form onSubmit={submitSearch} className="relative hidden md:flex flex-1 max-w-xs ml-auto items-center">
-          <label htmlFor="header-search" className="sr-only">
-            Pesquisar produtos
-          </label>
-          <Search size={16} strokeWidth={2} className="pointer-events-none absolute left-3 text-text-muted" />
-          <input
-            id="header-search"
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar produtos..."
-            className="w-full rounded-xl border border-border bg-surface-1 py-2 pl-9 pr-3.5 text-sm text-text placeholder:text-text-muted/70 transition-colors focus-visible:outline-none focus-visible:border-aki-green-500 focus-visible:ring-2 focus-visible:ring-aki-green-500/30"
-          />
-        </form>
-
-        <div className="flex items-center gap-2 ml-auto md:ml-0">
+        <div className="flex items-center gap-2 ml-auto">
+          <ThemeToggle />
           <button
             type="button"
             onClick={() => openCart()}
@@ -174,16 +155,6 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
               </li>
             ))}
           </ul>
-          <form onSubmit={submitSearch} className="relative mt-3 flex md:hidden">
-            <Search size={16} strokeWidth={2} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar produtos..."
-              className="w-full rounded-xl border border-border bg-surface-1 py-2.5 pl-9 pr-3.5 text-sm text-text placeholder:text-text-muted/70 focus-visible:outline-none focus-visible:border-aki-green-500"
-            />
-          </form>
           <a
             href={whatsappHref}
             target="_blank"

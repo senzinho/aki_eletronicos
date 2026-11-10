@@ -31,6 +31,7 @@ export default function IntegracoesPage() {
     const payload = {
       gtm_id: String(form.get('gtm_id') ?? ''),
       ga4_id: String(form.get('ga4_id') ?? ''),
+      google_site_verification: String(form.get('google_site_verification') ?? ''),
       custom_scripts_head: String(form.get('custom_scripts_head') ?? ''),
       custom_scripts_body: String(form.get('custom_scripts_body') ?? ''),
     };
@@ -69,6 +70,18 @@ export default function IntegracoesPage() {
             placeholder="G-XXXXXXXXXX"
             hint="Preencha somente se não estiver usando o GA4 via GTM, para evitar contagem duplicada."
             defaultValue={values.ga4_id ?? ''}
+          />
+        </Card>
+
+        <Card className="p-6 flex flex-col gap-4">
+          <h2 className="font-heading text-base font-semibold">Google Search Console</h2>
+          <Input
+            id="google_site_verification"
+            name="google_site_verification"
+            label="Código de verificação (meta tag)"
+            placeholder="abcdEFGhijkLmnOPQrstuVWXyz..."
+            hint='Em search.google.com/search-console, adicione a propriedade (URL prefix) com o endereço do site, escolha o método "Tag HTML" e cole aqui apenas o valor do atributo content (não a tag inteira). Depois de salvar, volte ao Search Console e clique em Verificar. Use essa mesma tela para enviar o sitemap.xml listado abaixo.'
+            defaultValue={values.google_site_verification ?? ''}
           />
         </Card>
 
