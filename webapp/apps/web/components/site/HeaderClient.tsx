@@ -69,13 +69,13 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
       <div className="mx-auto flex h-20 max-w-[1200px] items-center gap-4 px-4 sm:px-6">
         <Logo logoPath={logoPath} companyName={companyName} />
 
-        <nav aria-label="Navegação principal" className="hidden lg:flex items-center gap-7 ml-4">
+        <nav aria-label="Navegação principal" className="hidden xl:flex items-center gap-5 ml-4">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={clsx(
-                'relative text-base font-medium transition-colors hover:text-aki-green-400 py-1',
+                'relative whitespace-nowrap text-base font-medium transition-colors hover:text-aki-green-400 py-1',
                 'after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-aki-green-400 after:transition-all after:duration-300',
                 pathname === link.href ? 'text-aki-green-400 after:w-full' : 'text-text-muted after:w-0 hover:after:w-full',
               )}
@@ -121,7 +121,7 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
             aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
-            className="lg:hidden rounded-xl p-2.5 text-text transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aki-green-400"
+            className="xl:hidden rounded-xl p-2.5 text-text transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aki-green-400"
           >
             <span className="relative block h-[21px] w-[21px]">
               <Menu size={21} strokeWidth={1.8} className={clsx('absolute inset-0 transition-all duration-200', menuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100')} />
@@ -135,7 +135,7 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
         id="mobile-menu"
         aria-label="Navegação mobile"
         className={clsx(
-          'lg:hidden grid overflow-hidden border-t border-border bg-bg transition-[grid-template-rows] duration-300 ease-out',
+          'xl:hidden grid overflow-hidden border-t border-border bg-bg transition-[grid-template-rows] duration-300 ease-out',
           menuOpen ? 'grid-rows-[1fr] border-opacity-100' : 'grid-rows-[0fr] border-opacity-0',
         )}
       >
