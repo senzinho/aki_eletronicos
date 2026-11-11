@@ -21,9 +21,9 @@ const SOCIAL_ICON: Record<string, ReactNode> = {
 
 export async function SiteFooter() {
   const [siteSettings, categoryList, links] = await Promise.all([
-    settings.get(),
-    categories.list(),
-    socialLinks.list(),
+    settings.get().catch(() => ({}) as Record<string, string>),
+    categories.list().catch(() => []),
+    socialLinks.list().catch(() => []),
   ]);
 
   const companyName = siteSettings.nome_empresa || 'Aki Eletrônicos';

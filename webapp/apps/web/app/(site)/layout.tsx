@@ -12,7 +12,9 @@ import { assetUrl } from '../../lib/asset-url';
 export const dynamic = 'force-dynamic';
 
 export default async function SiteLayout({ children }: { children: ReactNode }) {
-  const s = await settings.get();
+  // Falls back to defaults if the API is briefly unreachable (e.g. mid-redeploy,
+  // when the api and web containers restart at the same time).
+  const s = await settings.get().catch(() => ({}) as Record<string, string>);
   const base = s.app_url || 'http://localhost:3002';
 
   const jsonLd = {
