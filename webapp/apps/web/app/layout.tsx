@@ -39,6 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
   // Falls back to defaults if the API isn't reachable yet (e.g. during a Docker build).
   const s = await settings.get().catch(() => ({}) as Record<string, string>);
   const ogImage = assetUrl(s.og_image || null);
+  const favicon = assetUrl(s.favicon || s.logo || null) || "/images/favicon.png";
 
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3002"),
@@ -48,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: s.seo_description || DEFAULT_DESCRIPTION,
     icons: {
-      icon: "/images/favicon.png",
+      icon: favicon,
     },
     openGraph: {
       type: "website",
