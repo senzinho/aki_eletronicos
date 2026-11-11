@@ -5,7 +5,7 @@ export type ButtonSize = 'md' | 'lg' | 'sm';
 
 export function buttonStyles(variant: ButtonVariant = 'primary', size: ButtonSize = 'md', className?: string) {
   return clsx(
-    'inline-flex items-center justify-center gap-2 rounded-xl font-semibold font-heading transition-all duration-200 ease-out cursor-pointer select-none',
+    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold font-heading transition-all duration-200 ease-out cursor-pointer select-none',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aki-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
     'disabled:opacity-50 disabled:cursor-not-allowed',
     size === 'lg' && 'h-14 px-8 text-base',

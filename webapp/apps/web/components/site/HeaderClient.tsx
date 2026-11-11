@@ -109,7 +109,7 @@ export function HeaderClient({ companyName, logoPath, whatsappNumber }: HeaderCl
             target="_blank"
             rel="noopener"
             onClick={() => analytics.track({ eventType: 'whatsapp_click' })}
-            className={clsx(buttonStyles('whatsapp', 'sm', 'gap-1.5'), 'hidden sm:inline-flex')}
+            className={clsx(buttonStyles('whatsapp', 'sm', 'gap-1.5'), 'hidden shrink-0 sm:inline-flex')}
           >
             <WhatsAppIcon size={15} />
             Falar no WhatsApp
