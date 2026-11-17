@@ -10,24 +10,55 @@ interface Brand {
 const S = 0.38;
 const logo = (file: string, w: number, h: number) => ({ file, width: Math.round(w * S), height: Math.round(h * S) });
 
+/** Every silhouette we ship in /public/images/brands, keyed by lowercase brand name. */
+const LOGOS = {
+  intel: logo('intel', 338, 133),
+  amd: logo('amd', 444, 109),
+  asus: logo('asus', 444, 95),
+  msi: logo('msi', 110, 133),
+  corsair: logo('corsair', 138, 133),
+  hyperx: logo('hyperx', 234, 134),
+  xiaomi: logo('xiaomi', 134, 134),
+  apple: logo('apple', 110, 134),
+  samsung: logo('samsung', 444, 71),
+  jbl: logo('jbl', 235, 134),
+};
+
 export const PC_BRANDS: Brand[] = [
-  { name: 'Intel', logo: logo('intel', 338, 133) },
-  { name: 'AMD', logo: logo('amd', 444, 109) },
+  { name: 'Intel', logo: LOGOS.intel },
+  { name: 'AMD', logo: LOGOS.amd },
   { name: 'Gigabyte' },
-  { name: 'Asus', logo: logo('asus', 444, 95) },
-  { name: 'MSI', logo: logo('msi', 110, 133) },
+  { name: 'Asus', logo: LOGOS.asus },
+  { name: 'MSI', logo: LOGOS.msi },
   { name: 'ASRock' },
-  { name: 'Corsair', logo: logo('corsair', 138, 133) },
-  { name: 'HyperX', logo: logo('hyperx', 234, 134) },
+  { name: 'Corsair', logo: LOGOS.corsair },
+  { name: 'HyperX', logo: LOGOS.hyperx },
   { name: 'Aigo' },
 ];
 
 export const PHONE_BRANDS: Brand[] = [
-  { name: 'Xiaomi', logo: logo('xiaomi', 134, 134) },
-  { name: 'Apple', logo: logo('apple', 110, 134) },
-  { name: 'Samsung', logo: logo('samsung', 444, 71) },
-  { name: 'JBL', logo: logo('jbl', 235, 134) },
+  { name: 'Xiaomi', logo: LOGOS.xiaomi },
+  { name: 'Apple', logo: LOGOS.apple },
+  { name: 'Samsung', logo: LOGOS.samsung },
+  { name: 'JBL', logo: LOGOS.jbl },
 ];
+
+const ALIASES: Record<string, keyof typeof LOGOS> = { iphone: 'apple' };
+const lookupKey = (name: string) =>
+  name
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
+
+/** Brand names typed in the admin → marquee tiles: our logo when we have one, a plain wordmark otherwise. */
+export function brandsFromNames(names: string[]): Brand[] {
+  return names.map((name) => {
+    const key = lookupKey(name);
+    const id = key in LOGOS ? (key as keyof typeof LOGOS) : ALIASES[key];
+    return { name, logo: id ? LOGOS[id] : undefined };
+  });
+}
 
 function BrandTile({ brand }: { brand: Brand }) {
   return (
