@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { HeroWhatsAppButton } from '../../../components/site/HeroWhatsAppButton';
 import { ContactForm } from '../../../components/site/ContactForm';
+import { PcBuildAnimation } from '../../../components/site/PcBuildAnimation';
 import { Card } from '../../../components/ui/Card';
 import { Reveal } from '../../../components/ui/Reveal';
 import { settings } from '../../../lib/api';
@@ -67,6 +68,20 @@ export default async function MontagemDePcPage() {
             <HeroWhatsAppButton whatsappNumber={s.whatsapp || '5541998132536'} label="Solicitar orçamento" variant="primary" />
           </div>
         </Reveal>
+      </section>
+
+      <section className="border-b border-border bg-surface-1/40">
+        <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
+          <Reveal>
+            <h2 className="font-heading text-2xl font-bold mb-2">Veja como montamos seu PC</h2>
+            <p className="mb-10 max-w-md text-sm text-text-muted">
+              Do gabinete vazio ao PC testado e pronto para uso, passo a passo.
+            </p>
+          </Reveal>
+          <Reveal delay={100} className="reveal-scale">
+            <PcBuildAnimation />
+          </Reveal>
+        </div>
       </section>
 
       <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
