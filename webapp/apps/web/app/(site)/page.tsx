@@ -8,6 +8,7 @@ import { Reveal } from '../../components/ui/Reveal';
 import { ProductCard } from '../../components/site/ProductCard';
 import { HeroWhatsAppButton } from '../../components/site/HeroWhatsAppButton';
 import { HeroVideo } from '../../components/site/HeroVideo';
+import { BrandMarquee, PHONE_BRANDS } from '../../components/site/BrandMarquee';
 import { assetUrl } from '../../lib/asset-url';
 import { categories, products, settings, testimonials as testimonialsApi } from '../../lib/api';
 
@@ -124,6 +125,19 @@ export default async function HomePage() {
             </Link>
           </Reveal>
         </div>
+      </section>
+
+      {/* MARCAS */}
+      <section className="border-t border-border bg-surface-1/40 py-16">
+        <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+          <Reveal>
+            <h2 className="font-heading text-2xl font-bold mb-2">Marcas que você encontra aqui</h2>
+            <p className="mb-8 max-w-md text-sm text-text-muted">
+              Celulares, acessórios e áudio das marcas que você já conhece.
+            </p>
+          </Reveal>
+        </div>
+        <BrandMarquee brands={PHONE_BRANDS} />
       </section>
 
       {/* CATEGORIAS */}

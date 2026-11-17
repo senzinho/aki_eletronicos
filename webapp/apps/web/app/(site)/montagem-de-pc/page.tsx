@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { HeroWhatsAppButton } from '../../../components/site/HeroWhatsAppButton';
 import { ContactForm } from '../../../components/site/ContactForm';
 import { PcBuildAnimation } from '../../../components/site/PcBuildAnimation';
+import { BrandMarquee, PC_BRANDS } from '../../../components/site/BrandMarquee';
 import { Card } from '../../../components/ui/Card';
 import { Reveal } from '../../../components/ui/Reveal';
 import { settings } from '../../../lib/api';
@@ -47,8 +48,6 @@ const DIFFERENTIALS = [
   ['Transparência', 'Orçamento detalhado, sem surpresas.'],
   ['Atendimento rápido', 'Resposta ágil pelo WhatsApp.'],
 ] as const;
-
-const BRANDS = ['Gigabyte', 'Asus', 'MSI', 'ASRock', 'Intel', 'AMD', 'Corsair', 'HyperX', 'Aigo'] as const;
 
 export default async function MontagemDePcPage() {
   const s = await settings.get();
@@ -117,19 +116,16 @@ export default async function MontagemDePcPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
-        <Reveal>
-          <h2 className="font-heading text-2xl font-bold mb-8">Marcas com que trabalhamos</h2>
-        </Reveal>
-        <div className="grid grid-cols-3 gap-4 sm:grid-cols-5">
-          {BRANDS.map((brand, i) => (
-            <Reveal key={brand} delay={Math.min(i, 7) * 50} className="reveal-scale">
-              <Card className="flex items-center justify-center p-5 text-center transition-all duration-300 hover:border-aki-green-500/40 hover:-translate-y-0.5">
-                <span className="font-heading text-sm font-semibold">{brand}</span>
-              </Card>
-            </Reveal>
-          ))}
+      <section className="py-16">
+        <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+          <Reveal>
+            <h2 className="font-heading text-2xl font-bold mb-2">Marcas com que trabalhamos</h2>
+            <p className="mb-8 max-w-md text-sm text-text-muted">
+              Peças originais das fabricantes que são referência em hardware.
+            </p>
+          </Reveal>
         </div>
+        <BrandMarquee brands={PC_BRANDS} />
       </section>
 
       <section className="border-y border-border bg-surface-1/40">

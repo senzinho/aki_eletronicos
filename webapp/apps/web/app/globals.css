@@ -275,6 +275,42 @@ dialog::backdrop {
   animation: pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
+/* Brand marquee (see BrandMarquee.tsx): endless slide, edges fade out, pauses on hover */
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  padding-block: 0.5rem; /* room for the hover lift + glow */
+  margin-block: -0.5rem;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-slide var(--marquee-duration, 45s) linear infinite;
+}
+
+.marquee-reverse {
+  animation-direction: reverse;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Logos are single-color silhouettes painted with currentColor, so they follow light/dark and hover automatically */
+.brand-logo {
+  background-color: currentColor;
+  -webkit-mask: var(--logo) center / contain no-repeat;
+  mask: var(--logo) center / contain no-repeat;
+}
+
 /* Shimmer for skeletons */
 @keyframes shimmer {
   0% {
@@ -292,6 +328,14 @@ dialog::backdrop {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .marquee-track {
+    animation: none !important;
+  }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
