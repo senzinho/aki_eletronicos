@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { HeroWhatsAppButton } from '../../../components/site/HeroWhatsAppButton';
-import { ContactForm } from '../../../components/site/ContactForm';
-import { PcBuildAnimation } from '../../../components/site/PcBuildAnimation';
+import { AssemblyHero } from '../../../components/site/hero-3d/AssemblyHero';
+import { HeroAccent } from '../../../components/site/hero-3d/HeroAccent';
+import { EngineeringTimeline } from '../../../components/site/EngineeringTimeline';
+import { PerformanceStats } from '../../../components/site/PerformanceStats';
 import { BrandMarquee, PC_BRANDS } from '../../../components/site/BrandMarquee';
 import { Card } from '../../../components/ui/Card';
 import { Reveal } from '../../../components/ui/Reveal';
@@ -40,76 +42,57 @@ const PROCESS_STEPS = [
   ['04', 'Nós montamos e testamos', 'Montagem, testes de estresse e entrega funcionando 100%.'],
 ] as const;
 
-const DIFFERENTIALS = [
-  ['Técnicos especializados', 'Equipe experiente em hardware, overclock e refrigeração.'],
-  ['Compatibilidade garantida', 'Checagem técnica de todas as peças antes da montagem.'],
-  ['Peças de qualidade', 'Componentes selecionados das melhores marcas do mercado.'],
-  ['Garantia no serviço', 'Montagem com garantia e suporte pós-venda.'],
-  ['Transparência', 'Orçamento detalhado, sem surpresas.'],
-  ['Atendimento rápido', 'Resposta ágil pelo WhatsApp.'],
-] as const;
-
 export default async function MontagemDePcPage() {
-  const s = await settings.get();
+  const s = await settings.get().catch(() => ({}) as Record<string, string>);
+  const whatsapp = s.whatsapp || '5541998132536';
 
   return (
     <div>
-      <section className="border-b border-border bg-surface-1/60">
-        <Reveal className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
-          <span className="text-sm font-semibold uppercase tracking-wide text-aki-green-400">Montagem de computadores</span>
-          <h1 className="section-title section-title--xl mt-3 max-w-xl">
-            Seu PC ideal, montado por especialistas.
-          </h1>
-          <p className="mt-3 max-w-md text-text-muted">
-            Montagem personalizada, upgrades e peças das melhores marcas para jogos, trabalho ou criação de conteúdo.
-          </p>
-          <div className="mt-6 inline-flex">
-            <HeroWhatsAppButton whatsappNumber={s.whatsapp || '5541998132536'} label="Solicitar orçamento" variant="primary" />
-          </div>
-        </Reveal>
-      </section>
+      <AssemblyHero
+        scene="pc"
+        ariaLabel="Montagem de PC em 3D"
+        whatsappNumber={whatsapp}
+        kicker="Aki Eletrônicos · Montagem de PC"
+        title={
+          <>
+            Seu próximo <HeroAccent>nível</HeroAccent> começa aqui.
+          </>
+        }
+        subtitle="Computadores personalizados, projetados peça por peça para entregar máxima performance, estabilidade e uma experiência extraordinária."
+        primary={{ label: 'Monte seu PC', message: 'Olá! Vim pelo site da Aki Eletrônicos e quero montar meu PC personalizado.' }}
+        secondary={{ label: 'Conheça nossos serviços', href: '#servicos' }}
+        marks={['Performance sem limites', 'Componentes selecionados', 'Montagem especializada']}
+      />
 
-      <section className="border-b border-border bg-surface-1/40">
-        <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
-          <Reveal>
-            <h2 className="section-title mb-2">Veja como montamos seu PC</h2>
-            <p className="mb-10 max-w-md text-sm text-text-muted">
-              Do gabinete vazio ao PC testado e pronto para uso, passo a passo.
-            </p>
-          </Reveal>
-          <Reveal delay={100} className="reveal-scale">
-            <PcBuildAnimation />
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
+      <section id="servicos" className="mx-auto max-w-[1200px] scroll-mt-20 px-4 py-16 sm:px-6">
         <Reveal>
           <h2 className="section-title mb-8">Serviços</h2>
         </Reveal>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {SERVICES.map(([name, desc], i) => (
             <Reveal key={name} delay={Math.min(i, 7) * 50} className="reveal-scale">
-              <Card className="flex flex-col gap-2 p-5 transition-all duration-300 hover:border-aki-green-500/40 hover:-translate-y-0.5">
+              <Card className="flex flex-col gap-2 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-aki-green-500/40 hover:bg-aki-green-500/5">
                 <h3 className="font-heading text-sm font-semibold">{name}</h3>
-                <p className="text-xs text-text-muted leading-relaxed">{desc}</p>
+                <p className="text-xs leading-relaxed text-text-muted">{desc}</p>
               </Card>
             </Reveal>
           ))}
         </div>
       </section>
 
-      <section className="border-y border-border bg-surface-1/40">
+      <section id="como" className="border-t border-border bg-surface-1/40">
         <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
           <Reveal>
             <h2 className="section-title mb-8">Como funciona?</h2>
           </Reveal>
-          <div className="grid gap-6 sm:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {PROCESS_STEPS.map(([num, title, desc], i) => (
               <Reveal key={num} delay={i * 100} className="reveal-left flex flex-col gap-2">
-                <span className="font-heading text-2xl font-bold text-aki-green-400">{num}</span>
+                <span className="font-heading text-3xl font-bold text-aki-green-400" style={{ textShadow: '0 0 22px rgba(47,211,92,.35)' }}>
+                  {num}
+                </span>
                 <h3 className="font-heading text-sm font-semibold">{title}</h3>
-                <p className="text-xs text-text-muted leading-relaxed">{desc}</p>
+                <p className="text-xs leading-relaxed text-text-muted">{desc}</p>
               </Reveal>
             ))}
           </div>
@@ -128,39 +111,33 @@ export default async function MontagemDePcPage() {
         <BrandMarquee brands={PC_BRANDS} />
       </section>
 
-      <section className="border-y border-border bg-surface-1/40">
-        <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
-          <Reveal>
-            <h2 className="section-title mb-8">Por que montar seu PC com a gente?</h2>
-          </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {DIFFERENTIALS.map(([title, desc], i) => (
-              <Reveal key={title} delay={i * 70} className="reveal-scale">
-                <Card className="p-5 transition-all duration-300 hover:border-aki-green-500/40 hover:-translate-y-0.5">
-                  <h3 className="font-heading text-sm font-semibold mb-1.5">{title}</h3>
-                  <p className="text-xs text-text-muted leading-relaxed">{desc}</p>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <EngineeringTimeline />
 
-      <section id="orcamento" className="border-t border-border">
-        <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2">
-          <Reveal className="reveal-left flex flex-col justify-center gap-4">
-            <h2 className="section-title">Prefere falar direto?</h2>
-            <p className="text-text-muted">Conte pra gente o uso e o orçamento pelo WhatsApp e receba um retorno rápido da nossa equipe.</p>
-            <HeroWhatsAppButton
-              whatsappNumber={s.whatsapp || '5541998132536'}
-              label="Falar direto no WhatsApp"
-            />
-          </Reveal>
-          <Reveal delay={100} className="reveal-right">
-            <Card className="p-6 sm:p-8">
-              <h2 className="font-heading text-lg font-semibold mb-5">Solicitar orçamento</h2>
-              <ContactForm type="contato" extraFields="montagem" />
-            </Card>
+      <PerformanceStats />
+
+      <section
+        id="orcamento"
+        aria-label="Solicite seu projeto"
+        className="relative overflow-hidden border-t border-white/10 text-white"
+        style={{ background: 'radial-gradient(ellipse at 70% 50%, #0d2616 0, #020503 65%)' }}
+      >
+        <div className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 lg:py-28">
+          <Reveal>
+            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-aki-green-400">Projeto sob medida</span>
+            <h2 className="mb-5 mt-4 max-w-[760px] font-heading text-[clamp(1.9rem,4.6vw,3.9rem)] font-extrabold uppercase leading-[1.05] tracking-tight">
+              Sua próxima máquina está a um projeto de distância.
+            </h2>
+            <p className="max-w-[480px] text-base text-white/75 sm:text-lg">
+              Conte o que você precisa. Nós projetamos a máquina ideal para transformar sua ideia em performance.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3.5">
+              <HeroWhatsAppButton
+                whatsappNumber={whatsapp}
+                variant="primary"
+                label="Projetar meu PC"
+                message="Olá! Vim pelo site da Aki Eletrônicos e quero projetar meu PC. Pode me passar um orçamento personalizado?"
+              />
+            </div>
           </Reveal>
         </div>
       </section>

@@ -357,6 +357,13 @@ dialog::backdrop {
   mask: var(--logo) center / contain no-repeat;
 }
 
+/* Montagem de PC — engineering timeline dot lights up when its step is reached (EngineeringTimeline.tsx) */
+.eng-step.is-on .eng-pt {
+  border-color: var(--aki-green-400);
+  background-color: var(--aki-green-400);
+  box-shadow: 0 0 16px var(--aki-green-400);
+}
+
 /* Shimmer for skeletons */
 @keyframes shimmer {
   0% {

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { HeroWhatsAppButton } from '../../../components/site/HeroWhatsAppButton';
-import { ContactForm } from '../../../components/site/ContactForm';
+import { BrandMarquee, PHONE_BRANDS } from '../../../components/site/BrandMarquee';
+import { AssemblyHero } from '../../../components/site/hero-3d/AssemblyHero';
+import { HeroAccent } from '../../../components/site/hero-3d/HeroAccent';
 import { Card } from '../../../components/ui/Card';
 import { Reveal } from '../../../components/ui/Reveal';
 import { settings } from '../../../lib/api';
@@ -48,26 +50,27 @@ const DIFFERENTIALS = [
 ] as const;
 
 export default async function ReparosPage() {
-  const s = await settings.get();
+  const s = await settings.get().catch(() => ({}) as Record<string, string>);
 
   return (
     <div>
-      <section className="border-b border-border bg-surface-1/60">
-        <Reveal className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
-          <span className="text-sm font-semibold uppercase tracking-wide text-aki-green-400">Assistência técnica</span>
-          <h1 className="section-title section-title--xl mt-3 max-w-xl">
-            Seu celular parou. A gente resolve.
-          </h1>
-          <p className="mt-3 max-w-md text-text-muted">
-            Diagnóstico preciso, reparos especializados e cuidado em cada detalhe.
-          </p>
-          <div className="mt-6 inline-flex">
-            <HeroWhatsAppButton whatsappNumber={s.whatsapp || '5541998132536'} label="Solicitar orçamento" variant="primary" />
-          </div>
-        </Reveal>
-      </section>
+      <AssemblyHero
+        scene="phone"
+        ariaLabel="Conserto de celular em 3D"
+        whatsappNumber={s.whatsapp || '5541998132536'}
+        kicker="Aki Eletrônicos · Assistência técnica"
+        title={
+          <>
+            Seu celular parou. <HeroAccent>A gente resolve.</HeroAccent>
+          </>
+        }
+        subtitle="Diagnóstico preciso, reparos especializados e cuidado em cada detalhe."
+        primary={{ label: 'Solicitar orçamento', message: 'Olá! Vim pelo site da Aki Eletrônicos e meu celular precisa de reparo. Pode me ajudar?' }}
+        secondary={{ label: 'Ver serviços', href: '#servicos' }}
+        marks={['Diagnóstico preciso', 'Peças de qualidade', 'Garantia no serviço']}
+      />
 
-      <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
+      <section id="servicos" className="mx-auto max-w-[1200px] scroll-mt-20 px-4 py-16 sm:px-6">
         <Reveal>
           <h2 className="section-title mb-8">Serviços</h2>
         </Reveal>
@@ -100,6 +103,18 @@ export default async function ReparosPage() {
         </div>
       </section>
 
+      <section className="py-16">
+        <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+          <Reveal>
+            <h2 className="section-title mb-2">Marcas com que trabalhamos</h2>
+            <p className="mb-8 max-w-md text-sm text-text-muted">
+              Assistência técnica para as marcas que você já conhece.
+            </p>
+          </Reveal>
+        </div>
+        <BrandMarquee brands={PHONE_BRANDS} />
+      </section>
+
       <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
         <Reveal>
           <h2 className="section-title mb-8">Por que confiar seu celular à nossa assistência?</h2>
@@ -117,22 +132,14 @@ export default async function ReparosPage() {
       </section>
 
       <section id="orcamento" className="border-t border-border bg-surface-1/40">
-        <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2">
-          <Reveal className="reveal-left flex flex-col justify-center gap-4">
-            <h2 className="section-title">Prefere falar direto?</h2>
-            <p className="text-text-muted">Descreva o problema pelo WhatsApp e receba um retorno rápido da nossa equipe.</p>
-            <HeroWhatsAppButton
-              whatsappNumber={s.whatsapp || '5541998132536'}
-              label="Falar direto no WhatsApp"
-            />
-          </Reveal>
-          <Reveal delay={100} className="reveal-right">
-            <Card className="p-6 sm:p-8">
-              <h2 className="font-heading text-lg font-semibold mb-5">Solicitar orçamento</h2>
-              <ContactForm type="reparo" extraFields="reparo" />
-            </Card>
-          </Reveal>
-        </div>
+        <Reveal className="reveal-left mx-auto flex max-w-[1200px] flex-col items-start gap-4 px-4 py-16 sm:px-6">
+          <h2 className="section-title">Fale direto com a gente</h2>
+          <p className="max-w-md text-text-muted">Descreva o problema pelo WhatsApp e receba um retorno rápido da nossa equipe.</p>
+          <HeroWhatsAppButton
+            whatsappNumber={s.whatsapp || '5541998132536'}
+            label="Falar direto no WhatsApp"
+          />
+        </Reveal>
       </section>
     </div>
   );

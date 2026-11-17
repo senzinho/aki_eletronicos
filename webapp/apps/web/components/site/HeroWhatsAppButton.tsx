@@ -9,10 +9,17 @@ interface HeroWhatsAppButtonProps {
   whatsappNumber: string;
   variant?: ButtonVariant;
   label?: string;
+  /** pre-filled WhatsApp message */
+  message?: string;
 }
 
-export function HeroWhatsAppButton({ whatsappNumber, variant = 'whatsapp', label = 'Falar com um vendedor' }: HeroWhatsAppButtonProps) {
-  const href = buildWhatsAppLink(whatsappNumber, 'Olá! Vim pelo site e gostaria de falar com um vendedor.');
+export function HeroWhatsAppButton({
+  whatsappNumber,
+  variant = 'whatsapp',
+  label = 'Falar com um vendedor',
+  message = 'Olá! Vim pelo site e gostaria de falar com um vendedor.',
+}: HeroWhatsAppButtonProps) {
+  const href = buildWhatsAppLink(whatsappNumber, message);
   return (
     <a
       href={href}
