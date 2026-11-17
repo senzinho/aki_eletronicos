@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Inter } from "next/font/google";
+import { Sora, Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { assetUrl } from "../lib/asset-url";
@@ -17,10 +17,10 @@ const THEME_INIT_SCRIPT = `
 })();
 `;
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const sora = Sora({
+  variable: "--font-sora",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -68,7 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${poppins.variable} ${inter.variable} h-full antialiased`}
+      className={`${sora.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

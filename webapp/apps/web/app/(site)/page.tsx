@@ -81,7 +81,7 @@ export default async function HomePage() {
         </div>
 
         <div className="relative mx-auto flex min-h-[600px] sm:min-h-[680px] lg:min-h-[760px] max-w-[1200px] flex-col justify-center gap-6 px-4 py-24 sm:px-6">
-          <h1 className="animate-hero-in max-w-xl font-heading text-4xl font-bold leading-[1.05] tracking-tight text-text sm:text-5xl">
+          <h1 className="animate-hero-in max-w-xl font-heading text-5xl font-extrabold leading-[1.02] tracking-[-0.04em] text-text sm:text-6xl">
             Seu próximo dispositivo está aqui.
           </h1>
           <p className="animate-hero-in max-w-md text-base text-text-muted sm:text-lg" style={{ animationDelay: '180ms' }}>
@@ -110,7 +110,7 @@ export default async function HomePage() {
             )}
           </Reveal>
           <Reveal delay={100} className="reveal-right flex flex-col gap-4">
-            <h2 className="font-heading text-2xl font-bold sm:text-3xl">Conheça a Aki Eletrônicos</h2>
+            <h2 className="section-title">Conheça a Aki Eletrônicos</h2>
             <p className="text-text-muted leading-relaxed">
               Somos especialistas em assistência técnica de celulares e informática, oferecendo serviços ágeis,
               confiáveis e de alta qualidade. Trabalhamos com diversas marcas, incluindo Xiaomi, iPhone, JBL,
@@ -131,7 +131,7 @@ export default async function HomePage() {
       <section className="border-t border-border bg-surface-1/40 py-16">
         <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
           <Reveal>
-            <h2 className="font-heading text-2xl font-bold mb-2">Marcas que você encontra aqui</h2>
+            <h2 className="section-title mb-2">Marcas que você encontra aqui</h2>
             <p className="mb-8 max-w-md text-sm text-text-muted">
               Celulares, acessórios e áudio das marcas que você já conhece.
             </p>
@@ -145,7 +145,7 @@ export default async function HomePage() {
         <section className="border-t border-border bg-surface-1/40">
           <div className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
             <Reveal>
-              <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8">Explore por categoria</h2>
+              <h2 className="section-title mb-8">Explore por categoria</h2>
             </Reveal>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
               {categoryList.map((c, i) => (
@@ -166,7 +166,7 @@ export default async function HomePage() {
       {featured.items.length > 0 && (
         <section className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
           <Reveal className="flex items-end justify-between mb-8">
-            <h2 className="font-heading text-2xl font-bold sm:text-3xl">Produtos em destaque</h2>
+            <h2 className="section-title">Produtos em destaque</h2>
             <Link href="/produtos" className="text-sm font-medium text-aki-green-400 transition-colors hover:text-aki-green-300">
               Ver todos
             </Link>
@@ -186,7 +186,7 @@ export default async function HomePage() {
         <section className="border-t border-border bg-surface-1/40">
           <div className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
             <Reveal>
-              <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8">Ofertas que merecem sua atenção</h2>
+              <h2 className="section-title mb-8">Ofertas que merecem sua atenção</h2>
             </Reveal>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
               {onSale.items.map((p, i) => (
@@ -202,7 +202,7 @@ export default async function HomePage() {
       {/* DIFERENCIAIS */}
       <section className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
         <Reveal>
-          <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8 text-center">
+          <h2 className="section-title mb-8 text-center">
             Uma experiência de compra simples
           </h2>
         </Reveal>
@@ -226,7 +226,7 @@ export default async function HomePage() {
         <section className="border-t border-border bg-surface-1/40">
           <div className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
             <Reveal>
-              <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-8">Quem compra, recomenda</h2>
+              <h2 className="section-title mb-8">Quem compra, recomenda</h2>
             </Reveal>
             <div className="grid gap-5 sm:grid-cols-3">
               {testimonialList.map((t, i) => (
@@ -252,7 +252,7 @@ export default async function HomePage() {
 
       {/* CTA FINAL */}
       <Reveal className="reveal-scale mx-auto max-w-[1200px] px-4 py-20 text-center sm:px-6">
-        <h2 className="font-heading text-2xl font-bold sm:text-3xl mb-3">Encontrou o que procurava?</h2>
+        <h2 className="section-title mb-3">Encontrou o que procurava?</h2>
         <p className="text-text-muted mb-8 max-w-md mx-auto">
           Escolha seu produto e converse com a Aki Eletrônicos para finalizar sua compra.
         </p>

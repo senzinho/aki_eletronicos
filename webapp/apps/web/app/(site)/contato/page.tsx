@@ -20,7 +20,7 @@ export default async function ContatoPage() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
       <Reveal>
-        <h1 className="font-heading text-3xl font-bold mb-2">Fale com a gente</h1>
+        <h1 className="section-title section-title--xl mb-2">Fale com a gente</h1>
         <p className="text-text-muted mb-10 max-w-lg">
           Envie sua mensagem pelo formulário ou fale diretamente pelo WhatsApp para um atendimento mais rápido.
         </p>

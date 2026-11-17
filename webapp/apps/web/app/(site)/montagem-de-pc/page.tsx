@@ -57,7 +57,7 @@ export default async function MontagemDePcPage() {
       <section className="border-b border-border bg-surface-1/60">
         <Reveal className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
           <span className="text-sm font-semibold uppercase tracking-wide text-aki-green-400">Montagem de computadores</span>
-          <h1 className="mt-3 max-w-xl font-heading text-3xl font-bold leading-tight sm:text-4xl">
+          <h1 className="section-title section-title--xl mt-3 max-w-xl">
             Seu PC ideal, montado por especialistas.
           </h1>
           <p className="mt-3 max-w-md text-text-muted">
@@ -72,7 +72,7 @@ export default async function MontagemDePcPage() {
       <section className="border-b border-border bg-surface-1/40">
         <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
           <Reveal>
-            <h2 className="font-heading text-2xl font-bold mb-2">Veja como montamos seu PC</h2>
+            <h2 className="section-title mb-2">Veja como montamos seu PC</h2>
             <p className="mb-10 max-w-md text-sm text-text-muted">
               Do gabinete vazio ao PC testado e pronto para uso, passo a passo.
             </p>
@@ -85,7 +85,7 @@ export default async function MontagemDePcPage() {
 
       <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
         <Reveal>
-          <h2 className="font-heading text-2xl font-bold mb-8">Serviços</h2>
+          <h2 className="section-title mb-8">Serviços</h2>
         </Reveal>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {SERVICES.map(([name, desc], i) => (
@@ -102,7 +102,7 @@ export default async function MontagemDePcPage() {
       <section className="border-y border-border bg-surface-1/40">
         <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
           <Reveal>
-            <h2 className="font-heading text-2xl font-bold mb-8">Como funciona?</h2>
+            <h2 className="section-title mb-8">Como funciona?</h2>
           </Reveal>
           <div className="grid gap-6 sm:grid-cols-4">
             {PROCESS_STEPS.map(([num, title, desc], i) => (
@@ -119,7 +119,7 @@ export default async function MontagemDePcPage() {
       <section className="py-16">
         <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
           <Reveal>
-            <h2 className="font-heading text-2xl font-bold mb-2">Marcas com que trabalhamos</h2>
+            <h2 className="section-title mb-2">Marcas com que trabalhamos</h2>
             <p className="mb-8 max-w-md text-sm text-text-muted">
               Peças originais das fabricantes que são referência em hardware.
             </p>
@@ -131,7 +131,7 @@ export default async function MontagemDePcPage() {
       <section className="border-y border-border bg-surface-1/40">
         <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
           <Reveal>
-            <h2 className="font-heading text-2xl font-bold mb-8">Por que montar seu PC com a gente?</h2>
+            <h2 className="section-title mb-8">Por que montar seu PC com a gente?</h2>
           </Reveal>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {DIFFERENTIALS.map(([title, desc], i) => (
@@ -149,7 +149,7 @@ export default async function MontagemDePcPage() {
       <section id="orcamento" className="border-t border-border">
         <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2">
           <Reveal className="reveal-left flex flex-col justify-center gap-4">
-            <h2 className="font-heading text-2xl font-bold">Prefere falar direto?</h2>
+            <h2 className="section-title">Prefere falar direto?</h2>
             <p className="text-text-muted">Conte pra gente o uso e o orçamento pelo WhatsApp e receba um retorno rápido da nossa equipe.</p>
             <HeroWhatsAppButton
               whatsappNumber={s.whatsapp || '5541998132536'}

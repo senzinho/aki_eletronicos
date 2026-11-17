@@ -61,7 +61,7 @@ export default async function OfertasPage({ searchParams }: { searchParams: Prom
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6">
       <OfertaBanner s={s} slotKey="ofertas_banner_topo" />
-      <h1 className="font-heading text-3xl font-bold mb-2">Ofertas que merecem sua atenção</h1>
+      <h1 className="section-title section-title--xl mb-2">Ofertas que merecem sua atenção</h1>
       <p className="text-text-muted mb-8">Descontos reais, calculados a partir do preço anterior cadastrado.</p>
       <div className="flex flex-col gap-6 lg:flex-row">
         <ProductFilters categories={categoryList} brands={brandList} hideOnSale />

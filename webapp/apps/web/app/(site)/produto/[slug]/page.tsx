@@ -99,7 +99,7 @@ export default async function ProdutoPage({ params }: PageProps) {
       {related.length > 0 && (
         <section className="mt-20 border-t border-border pt-12">
           <Reveal>
-            <h2 className="font-heading text-2xl font-bold mb-6">Você também pode gostar</h2>
+            <h2 className="section-title mb-6">Você também pode gostar</h2>
           </Reveal>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {related.map((p, i) => (

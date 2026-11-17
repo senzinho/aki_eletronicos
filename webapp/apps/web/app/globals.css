@@ -22,7 +22,7 @@
     radial-gradient(circle at 100% 0%, rgba(166, 230, 60, 0.1), transparent 45%),
     linear-gradient(180deg, #000000 0%, #060a07 45%, #0a0f0c 100%);
 
-  --font-heading: var(--font-poppins);
+  --font-heading: var(--font-sora);
   --font-body: var(--font-inter);
 
   /* dark surfaces swallow the logo's black half, so it sits on a light chip */
@@ -123,6 +123,52 @@ dialog::backdrop {
   }
   to {
     opacity: 1;
+  }
+}
+
+/* Section / page titles: large, tight, white→green gradient with a short accent bar.
+   In @layer components so utility classes (mb-8, text-center, max-w-*) still win. */
+@layer components {
+  .section-title {
+    display: block;
+    width: fit-content;
+    font-family: var(--font-heading), system-ui, sans-serif;
+    font-size: clamp(1.75rem, 1.25rem + 2vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.08;
+    padding-bottom: 0.08em; /* keeps descenders from being clipped by background-clip */
+    color: transparent;
+    background-image: linear-gradient(100deg, var(--text) 0%, var(--text) 45%, var(--aki-green-400) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  :root[data-theme='light'] .section-title {
+    background-image: linear-gradient(100deg, var(--text) 0%, var(--text) 45%, var(--aki-green-600) 100%);
+  }
+
+  .section-title--xl {
+    font-size: clamp(2.1rem, 1.4rem + 3vw, 3.5rem);
+    letter-spacing: -0.04em;
+  }
+
+  .section-title::after {
+    content: '';
+    display: block;
+    width: 3.25rem;
+    height: 4px;
+    margin-top: 0.7rem;
+    border-radius: 9999px;
+    background-image: linear-gradient(90deg, var(--aki-green-500), var(--aki-lime-400));
+  }
+
+  .section-title.text-center {
+    margin-inline: auto;
+  }
+
+  .section-title.text-center::after {
+    margin-inline: auto;
   }
 }
 

@@ -47,7 +47,7 @@ export default async function CategoriaPage({ params, searchParams }: PageProps)
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6">
-      <h1 className="font-heading text-3xl font-bold mb-8">{category.name}</h1>
+      <h1 className="section-title section-title--xl mb-8">{category.name}</h1>
       <div className="flex flex-col gap-6 lg:flex-row">
         <ProductFilters categories={categoryList} brands={brandList} hideCategory />
         <ProductResults

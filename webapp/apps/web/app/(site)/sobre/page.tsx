@@ -26,7 +26,7 @@ export default async function SobrePage() {
     <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6">
       <div className="grid items-center gap-10 md:grid-cols-2 mb-16">
         <Reveal className="reveal-left">
-          <h1 className="font-heading text-3xl font-bold mb-5 sm:text-4xl">Conheça a Aki Eletrônicos</h1>
+          <h1 className="section-title section-title--xl mb-5 sm:text-4xl">Conheça a Aki Eletrônicos</h1>
           <p className="text-text-muted leading-relaxed mb-4">
             Somos especialistas em assistência técnica de celulares e informática, oferecendo serviços ágeis,
             confiáveis e de alta qualidade. Trabalhamos com diversas marcas, incluindo Xiaomi, iPhone, JBL,
@@ -53,7 +53,7 @@ export default async function SobrePage() {
 
       {brandList.length > 0 && (
         <Reveal className="mb-16">
-          <h2 className="font-heading text-xl font-semibold mb-5 text-center">Marcas com as quais trabalhamos</h2>
+          <h2 className="section-title mb-5 text-center">Marcas com as quais trabalhamos</h2>
           <div className="flex flex-wrap justify-center gap-4">
             {brandList.map((b, i) => (
               <Reveal key={b.id} delay={i * 40} className="reveal-scale">
